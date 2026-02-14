@@ -160,6 +160,12 @@ async def run_daily_briefing():
         logger.warning("No articles found!")
         return None
     
+    # 限制处理数量（避免超时），优先处理最新的
+    MAX_ARTICLES = 50
+    if len(raw_articles) > MAX_ARTICLES:
+        raw_articles = sorted(raw_articles, key=lambda x: x.published_at, reverse=True)[:MAX_ARTICLES]
+        logger.info(f"Limited to {MAX_ARTICLES} most recent articles")
+    
     # Step 2: 处理
     logger.info("Step 2: Processing articles...")
     processor = NewsProcessor(
