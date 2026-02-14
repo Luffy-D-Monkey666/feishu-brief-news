@@ -1,0 +1,102 @@
+{
+  "date": "20260213",
+  "generated_at": "2026-02-14 10:00:00",
+  "total_articles": 3,
+  "categories_count": 3,
+  "sources_count": 1,
+  "summary": "今日要闻：Teamily AI推出支持多人与多AI代理实时协作的社交平台；商业航天硬件供应商感知起源完成近亿元融资；LiberLive U1无弦吉他上市首日登顶天猫榜首。",
+  "articles_by_category": {
+    "ai": [{
+      "id": "1",
+      "title_original": "Teamily AI 推出北美元宝派加强版，支持多人与多个AI Agents实时社交",
+      "title_zh": "Teamily AI 推出北美元宝派加强版，支持多人与多个AI Agents实时社交",
+      "source": "36氪",
+      "published_at": "2026-02-13 07:49",
+      "url": "https://36kr.com/p/3678646020940422",
+      "summary_zh": "AI原生即时通讯应用Teamily AI近期推出了其北美元宝派的加强版产品，这是一个支持多人与多个AI代理（Agents）实时协作的社交平台。该应用的核心是构建一个"代理社交网络"，让人类用户与AI代理能够在同一空间中共存、互动与协作。产品融合了即时通讯、任务管理与社交网络的功能，旨在通过AI增强人类在朋友、家庭及工作场景中的沟通与协作效率。公司已累计融资2000万美元，并计划于今年3月开启新一轮融资。",
+      "key_points": [
+        "支持多人与多AI代理实时协作的"代理社交网络"应用",
+        "具备跨群组记忆共享、全局记忆系统等核心功能",
+        "公司已累计融资2000万美元",
+        "创始人认为群体智能是未来趋势"
+      ],
+      "impact_analysis": "Teamily AI的推出标志着AI社交与协作领域进入一个新阶段，其"代理社交网络"概念可能重塑人机交互模式。它将推动即时通讯工具向AI原生平台演进，使AI代理从独立工具变为社交对话的实时参与者。",
+      "mentioned_people": [],
+      "category": "ai"
+    }],
+    "business": [{
+      "id": "2",
+      "title_original": "商业航天核心硬件供应商获近亿元融资，团队来自中科院",
+      "title_zh": "商业航天核心硬件供应商获近亿元融资，团队来自中科院",
+      "source": "36氪",
+      "published_at": "2026-02-13 01:25",
+      "url": "https://36kr.com/p/3681056499642245",
+      "summary_zh": "近日，专注于商业合成孔径雷达（SAR）载荷制造的济南感知起源信息科技有限公司宣布完成新一轮数千万元融资。本轮融资后，公司天使轮及天使+轮累计融资额近亿元，资金将主要用于首台套自研商业SAR载荷的研发与入轨验证、新型谱产品预研及商业拓展。公司核心团队来自中科院空天院，拥有多年大型雷达系统研发经验。",
+      "key_points": [
+        "感知起源完成近亿元融资",
+        "公司核心团队来自中科院",
+        "在MIMOSAR技术上具备先发优势",
+        "首套商业MIMOSAR载荷已进入正样阶段"
+      ],
+      "impact_analysis": "这条新闻对中国商业航天行业，特别是遥感卫星硬件领域具有显著影响。表明资本市场对商业航天核心硬件国产化与技术创新充满信心，将激励更多资本和人才涌入该细分赛道。",
+      "mentioned_people": [],
+      "category": "business"
+    }],
+    "consumer_electronics": [{
+      "id": "3",
+      "title_original": "四年三款爆品，LiberLive U1发布、C系列累计出货超50万台",
+      "title_zh": "四年三款爆品，LiberLive U1发布、C系列累计出货超50万台",
+      "source": "36氪",
+      "published_at": "2026-02-13 03:15",
+      "url": "https://36kr.com/p/3681146132836226",
+      "summary_zh": "近日，LiberLive新品U1无弦吉他正式上线天猫平台，首日即登顶平台榜首，上市首月与C2系列共同占据该品类热销榜前三。官方数据显示，其C系列累计出货量已突破50万台，标志着这个仅出现四年的新品类正被推入主流消费电子货架。U1的设计核心在于大幅降低音乐创作的门槛，主打小巧便携（60cm机身、1.5kg重量）。",
+      "key_points": [
+        "U1无弦吉他新品上市即获市场成功",
+        "C系列累计出货量突破50万台",
+        "极大降低了演奏门槛",
+        "定位从硬件供应商升级为"即时音乐表达系统"服务者"
+      ],
+      "impact_analysis": "LiberLive U1的成功发布及其系列产品的市场表现，验证了通过技术创新来大幅降低传统乐器学习与使用门槛的商业可行性，为行业开辟了庞大的"非专业"增量市场。",
+      "mentioned_people": [],
+      "category": "consumer_electronics"
+    }]
+  },
+  "predictions": [
+    {
+      "category": "ai",
+      "category_name": "AI类",
+      "timeframe": "week",
+      "content": "关注Teamily AI加强版发布后的初期用户反馈与市场反应，特别是其多AI代理实时协作功能在实际社交场景中的稳定性与用户体验。"
+    },
+    {
+      "category": "ai",
+      "category_name": "AI类",
+      "timeframe": "month",
+      "content": "预测将有更多AI原生应用跟进"AI代理社交网络"概念，推出类似的多代理协作功能，形成初步的市场细分竞争。"
+    },
+    {
+      "category": "business",
+      "category_name": "商业科技类",
+      "timeframe": "week",
+      "content": "关注感知起源融资后的首个官方技术进展披露，可能涉及首台套SAR载荷的研发里程碑或测试数据。"
+    },
+    {
+      "category": "business",
+      "category_name": "商业科技类",
+      "timeframe": "month",
+      "content": "预期感知起源将启动或公布其首台套自研商业SAR载荷的详细入轨验证计划时间表。"
+    },
+    {
+      "category": "consumer_electronics",
+      "category_name": "消费电子类",
+      "timeframe": "week",
+      "content": "关注LiberLive U1的首月销售数据及用户反馈，特别是社交媒体上关于其"聪明模式"易用性的真实评价。"
+    },
+    {
+      "category": "consumer_electronics",
+      "category_name": "消费电子类",
+      "timeframe": "month",
+      "content": "预期LiberLive将公布更详细的C系列及U1的用户画像与使用场景数据。"
+    }
+  ]
+}

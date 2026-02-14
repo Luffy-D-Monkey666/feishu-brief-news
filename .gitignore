@@ -21,12 +21,12 @@ ENV/
 logs/
 *.log
 
-# Data (keep structure, ignore content)
-data/*.json
+# Data - keep sample data for demo
+# data/*.json
 !data/.gitkeep
 
-# Output (keep structure, ignore content)  
-output/*.md
+# Output - keep sample output for demo
+# output/*.md
 !output/.gitkeep
 
 # OS
