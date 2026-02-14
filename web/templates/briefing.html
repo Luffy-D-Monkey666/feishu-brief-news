@@ -1,127 +1,124 @@
 {% extends "base.html" %}
 
-{% block title %}科技简报 - {{ date[:4] }}-{{ date[4:6] }}-{{ date[6:] }}{% endblock %}
+{% block title %}科技简报 · {{ date[:4] }}.{{ date[4:6] }}.{{ date[6:] }}{% endblock %}
 
 {% block content %}
-<div class="min-h-screen">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
-        
-        <!-- Back Link -->
-        <div class="mb-6 sm:mb-8 animate-fade-in">
-            <a href="/" class="inline-flex items-center gap-2 text-white/50 hover:text-white transition-colors group">
-                <svg class="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<div class="min-h-screen relative">
+    
+    <!-- Fixed Navigation -->
+    <nav class="nav-blur fixed top-0 left-0 right-0 z-50 safe-top">
+        <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+            <a href="/" class="flex items-center gap-2 text-sm font-medium hover:opacity-80 transition-opacity" style="color: var(--text-secondary);">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                 </svg>
-                <span>返回首页</span>
+                <span>返回</span>
             </a>
+            <span class="text-sm font-medium" style="color: var(--text-tertiary);">{{ date[:4] }}.{{ date[4:6] }}.{{ date[6:] }}</span>
         </div>
+    </nav>
+    
+    <div class="max-w-5xl mx-auto px-6 pt-24 pb-20">
         
         <!-- Header -->
-        <header class="glass rounded-2xl sm:rounded-3xl p-6 sm:p-10 mb-8 sm:mb-12 animate-slide-up">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div>
-                    <div class="flex items-center gap-3 mb-3">
-                        <span class="text-3xl sm:text-4xl">📰</span>
-                        <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-white">每日全球科技简报</h1>
-                    </div>
-                    <p class="text-xl sm:text-2xl gradient-text font-semibold">{{ date[:4] }}年{{ date[4:6] }}月{{ date[6:] }}日</p>
-                </div>
-                <div class="text-left sm:text-right">
-                    <p class="text-xs sm:text-sm text-white/40 mb-1">更新时间</p>
-                    <p class="text-white/70 font-medium">{{ briefing.get('generated_at', '06:00 AM') }}</p>
-                </div>
+        <header class="text-center mb-16 animate-in">
+            <div class="mb-4">
+                <span class="text-5xl">📰</span>
             </div>
+            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-4">
+                <span class="gradient-text">每日科技简报</span>
+            </h1>
+            <p class="text-2xl sm:text-3xl font-semibold gradient-text-color mb-3">
+                {{ date[:4] }}年{{ date[4:6] }}月{{ date[6:] }}日
+            </p>
+            <p class="text-sm" style="color: var(--text-tertiary);">
+                更新于 {{ briefing.get('generated_at', '06:00') }} CST
+            </p>
         </header>
         
         {% if briefing.get('articles_by_category') or briefing.get('articles') %}
         
-        <!-- Overview Stats -->
-        <section class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-8 sm:mb-12 animate-slide-up" style="animation-delay: 0.1s">
-            <div class="stat-card rounded-2xl p-5 sm:p-6 text-center">
-                <p class="text-3xl sm:text-4xl font-bold gradient-text mb-1">{{ briefing.total_articles or 0 }}</p>
-                <p class="text-xs sm:text-sm text-white/50">新闻总数</p>
+        <!-- Stats Grid -->
+        <section class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-16 animate-in" style="animation-delay: 0.1s;">
+            <div class="card p-6 text-center">
+                <p class="stat-number gradient-text-color">{{ briefing.total_articles or 0 }}</p>
+                <p class="text-sm mt-2" style="color: var(--text-tertiary);">新闻总数</p>
             </div>
-            <div class="stat-card rounded-2xl p-5 sm:p-6 text-center">
-                <p class="text-3xl sm:text-4xl font-bold gradient-text mb-1">{{ briefing.categories_count or 12 }}</p>
-                <p class="text-xs sm:text-sm text-white/50">覆盖类别</p>
+            <div class="card p-6 text-center">
+                <p class="stat-number gradient-text-color">{{ briefing.categories_count or 12 }}</p>
+                <p class="text-sm mt-2" style="color: var(--text-tertiary);">覆盖类别</p>
             </div>
-            <div class="stat-card rounded-2xl p-5 sm:p-6 text-center">
-                <p class="text-3xl sm:text-4xl font-bold gradient-text mb-1">{{ briefing.sources_count or '20+' }}</p>
-                <p class="text-xs sm:text-sm text-white/50">新闻来源</p>
+            <div class="card p-6 text-center">
+                <p class="stat-number gradient-text-color">{{ briefing.sources_count or '20+' }}</p>
+                <p class="text-sm mt-2" style="color: var(--text-tertiary);">新闻来源</p>
             </div>
-            <div class="stat-card rounded-2xl p-5 sm:p-6 text-center">
-                <p class="text-3xl sm:text-4xl font-bold gradient-text mb-1">{{ briefing.predictions|length if briefing.predictions else 12 }}</p>
-                <p class="text-xs sm:text-sm text-white/50">预测分析</p>
+            <div class="card p-6 text-center">
+                <p class="stat-number gradient-text-color">{{ briefing.predictions|length if briefing.predictions else 4 }}</p>
+                <p class="text-sm mt-2" style="color: var(--text-tertiary);">预测维度</p>
             </div>
         </section>
         
         <!-- Summary -->
         {% if briefing.get('summary') %}
-        <section class="glass rounded-2xl sm:rounded-3xl p-6 sm:p-8 mb-8 sm:mb-12 animate-slide-up" style="animation-delay: 0.2s">
-            <h2 class="text-lg sm:text-xl font-semibold text-white mb-4 flex items-center gap-2">
-                <span class="text-xl">📝</span> 今日要点
+        <section class="card p-8 mb-12 animate-in" style="animation-delay: 0.15s;">
+            <h2 class="text-xl font-semibold mb-4 flex items-center gap-2">
+                <span>📝</span> 今日要点
             </h2>
-            <p class="text-white/70 leading-relaxed text-sm sm:text-base">{{ briefing.summary }}</p>
+            <p class="leading-relaxed" style="color: var(--text-secondary);">{{ briefing.summary }}</p>
         </section>
         {% endif %}
         
+        <!-- Category Navigation -->
+        <nav class="category-nav hide-scrollbar mb-8 animate-in" style="animation-delay: 0.2s;">
+            {% for category, articles in briefing.articles_by_category.items() if articles %}
+            <a href="#{{ category }}" class="category-pill">
+                {% if category == 'ai' %}🤖 AI{% elif category == 'robotics' %}🦾 机器人{% elif category == 'embodied_ai' %}👓 具身智能{% elif category == 'semiconductor' %}💾 半导体{% elif category == 'auto' %}🚗 汽车{% elif category == 'health' %}🏥 医疗{% elif category == 'economy' %}📊 经济{% elif category == 'business' %}💼 商业{% elif category == 'politics' %}🏛️ 政治{% elif category == 'investment' %}📈 投资{% elif category == 'consumer_electronics' %}📱 消费电子{% elif category == 'key_people' %}🎤 人物{% else %}📌 {{ category }}{% endif %}
+                <span class="ml-1 opacity-50">{{ articles|length }}</span>
+            </a>
+            {% endfor %}
+        </nav>
+        
         <!-- Articles by Category -->
         {% for category, articles in briefing.articles_by_category.items() if articles %}
-        <section class="glass rounded-2xl sm:rounded-3xl p-6 sm:p-8 mb-6 sm:mb-8 animate-slide-up" style="animation-delay: {{ 0.3 + loop.index * 0.1 }}s">
-            <h2 class="text-xl sm:text-2xl font-bold text-white mb-6 sm:mb-8 flex items-center gap-3">
-                <span class="text-2xl sm:text-3xl">
+        <section id="{{ category }}" class="mb-12 animate-in" style="animation-delay: {{ 0.25 + loop.index * 0.05 }}s;">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="text-2xl">
                     {% if category == 'ai' %}🤖{% elif category == 'robotics' %}🦾{% elif category == 'embodied_ai' %}👓{% elif category == 'semiconductor' %}💾{% elif category == 'auto' %}🚗{% elif category == 'health' %}🏥{% elif category == 'economy' %}📊{% elif category == 'business' %}💼{% elif category == 'politics' %}🏛️{% elif category == 'investment' %}📈{% elif category == 'consumer_electronics' %}📱{% elif category == 'key_people' %}🎤{% else %}📌{% endif %}
                 </span>
-                <span>
+                <h2 class="section-title">
                     {% if category == 'ai' %}AI{% elif category == 'robotics' %}机器人{% elif category == 'embodied_ai' %}具身智能{% elif category == 'semiconductor' %}半导体{% elif category == 'auto' %}汽车{% elif category == 'health' %}医疗健康{% elif category == 'economy' %}经济政策{% elif category == 'business' %}商业科技{% elif category == 'politics' %}政治政策{% elif category == 'investment' %}投资财经{% elif category == 'consumer_electronics' %}消费电子{% elif category == 'key_people' %}关键人物{% else %}{{ category }}{% endif %}
-                </span>
-                <span class="text-sm font-normal text-white/40 ml-1">({{ articles|length }})</span>
-            </h2>
+                </h2>
+                <span class="text-sm" style="color: var(--text-tertiary);">{{ articles|length }} 条</span>
+            </div>
             
-            <div class="space-y-4 sm:space-y-6">
+            <div class="space-y-4">
                 {% for article in articles %}
-                <article class="article-card p-5 sm:p-6">
-                    <!-- Title -->
-                    <h3 class="text-base sm:text-lg font-semibold text-white mb-2 leading-snug">
-                        {{ article.title_original }}
-                    </h3>
+                <article class="article-card">
+                    <h3 class="text-lg font-semibold mb-2 leading-snug">{{ article.title_original }}</h3>
                     {% if article.title_zh and article.title_zh != article.title_original %}
-                    <p class="text-white/60 mb-3 text-sm sm:text-base">{{ article.title_zh }}</p>
+                    <p class="mb-3" style="color: var(--text-secondary);">{{ article.title_zh }}</p>
                     {% endif %}
                     
-                    <!-- Meta -->
-                    <div class="flex flex-wrap items-center gap-3 sm:gap-4 text-xs sm:text-sm text-white/40 mb-4">
-                        <span class="flex items-center gap-1">
-                            <span>📰</span> {{ article.source }}
-                        </span>
-                        <span class="flex items-center gap-1">
-                            <span>🕐</span> {{ article.published_at }}
-                        </span>
+                    <div class="flex flex-wrap items-center gap-4 text-sm mb-4" style="color: var(--text-tertiary);">
+                        <span class="flex items-center gap-1">📰 {{ article.source }}</span>
+                        <span class="flex items-center gap-1">🕐 {{ article.published_at }}</span>
                         {% if article.mentioned_people %}
-                        <span class="flex items-center gap-1">
-                            <span>👤</span> {{ article.mentioned_people|join(', ') }}
-                        </span>
+                        <span class="flex items-center gap-1">👤 {{ article.mentioned_people|join(', ') }}</span>
                         {% endif %}
                     </div>
                     
-                    <!-- Summary -->
-                    <div class="bg-white/5 rounded-xl p-4 mb-4">
-                        <h4 class="text-xs sm:text-sm font-semibold text-white/70 mb-2 flex items-center gap-1">
-                            <span>📋</span> 摘要
-                        </h4>
-                        <p class="text-white/60 leading-relaxed text-sm">{{ article.summary_zh[:500] }}{% if article.summary_zh|length > 500 %}...{% endif %}</p>
+                    <div class="rounded-xl p-4 mb-4" style="background: var(--bg-card);">
+                        <h4 class="text-sm font-medium mb-2" style="color: var(--text-secondary);">📋 摘要</h4>
+                        <p class="text-sm leading-relaxed" style="color: var(--text-secondary);">{{ article.summary_zh[:500] }}{% if article.summary_zh|length > 500 %}...{% endif %}</p>
                     </div>
                     
-                    <!-- Key Points -->
                     {% if article.key_points %}
                     <div class="mb-4">
-                        <h4 class="text-xs sm:text-sm font-semibold text-white/70 mb-2 flex items-center gap-1">
-                            <span>🔑</span> 关键要点
-                        </h4>
+                        <h4 class="text-sm font-medium mb-2" style="color: var(--text-secondary);">🔑 关键要点</h4>
                         <ul class="space-y-2">
                             {% for point in article.key_points[:4] %}
-                            <li class="text-sm text-white/60 flex items-start gap-2">
-                                <span class="text-indigo-400 mt-1">•</span>
+                            <li class="text-sm flex items-start gap-2" style="color: var(--text-secondary);">
+                                <span style="color: var(--accent);">•</span>
                                 <span>{{ point }}</span>
                             </li>
                             {% endfor %}
@@ -129,21 +126,15 @@
                     </div>
                     {% endif %}
                     
-                    <!-- Impact -->
                     {% if article.impact_analysis %}
-                    <div class="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4 mb-4">
-                        <h4 class="text-xs sm:text-sm font-semibold text-amber-400 mb-2 flex items-center gap-1">
-                            <span>💡</span> 影响分析
-                        </h4>
-                        <p class="text-sm text-amber-200/70">{{ article.impact_analysis[:300] }}{% if article.impact_analysis|length > 300 %}...{% endif %}</p>
+                    <div class="rounded-xl p-4 mb-4" style="background: rgba(234,179,8,0.1); border: 1px solid rgba(234,179,8,0.2);">
+                        <h4 class="text-sm font-medium mb-2" style="color: #facc15;">💡 影响分析</h4>
+                        <p class="text-sm" style="color: rgba(250,204,21,0.8);">{{ article.impact_analysis[:300] }}{% if article.impact_analysis|length > 300 %}...{% endif %}</p>
                     </div>
                     {% endif %}
                     
-                    <!-- Link -->
-                    <a href="{{ article.url }}" target="_blank" rel="noopener"
-                       class="inline-flex items-center gap-1 text-sm text-indigo-400 hover:text-indigo-300 font-medium transition-colors group">
-                        <span>🔗</span>
-                        <span>阅读原文</span>
+                    <a href="{{ article.url }}" target="_blank" rel="noopener" class="inline-flex items-center gap-1 text-sm font-medium transition-colors group" style="color: var(--accent);">
+                        <span>🔗 阅读原文</span>
                         <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
                         </svg>
@@ -152,25 +143,26 @@
                 {% endfor %}
             </div>
         </section>
+        <div class="divider mb-12"></div>
         {% endfor %}
         
         <!-- Predictions -->
         {% if briefing.get('predictions') %}
-        <section class="glass rounded-2xl sm:rounded-3xl p-6 sm:p-8 mb-8 animate-slide-up">
-            <h2 class="text-xl sm:text-2xl font-bold text-white mb-6 sm:mb-8 flex items-center gap-3">
-                <span class="text-2xl sm:text-3xl">🎯</span>
+        <section class="animate-in" style="animation-delay: 0.5s;">
+            <h2 class="section-title text-center mb-8 flex items-center justify-center gap-3">
+                <span class="text-2xl">🎯</span>
                 <span>未来预测</span>
             </h2>
             
-            <div class="grid sm:grid-cols-2 gap-4 sm:gap-6">
+            <div class="grid sm:grid-cols-2 gap-4">
                 {% for timeframe, title in [('week', '📆 未来一周'), ('month', '📆 未来一个月'), ('half_year', '📆 未来半年'), ('year', '📆 未来一年')] %}
-                <div class="prediction-card rounded-xl p-5 sm:p-6">
-                    <h3 class="font-semibold text-white mb-4 text-base sm:text-lg">{{ title }}</h3>
+                <div class="card p-6" style="background: linear-gradient(135deg, rgba(102,126,234,0.08) 0%, rgba(118,75,162,0.08) 100%);">
+                    <h3 class="font-semibold mb-4">{{ title }}</h3>
                     <div class="space-y-3">
                         {% for pred in briefing.predictions if pred.timeframe == timeframe %}
                         <div class="text-sm">
-                            <span class="font-medium text-indigo-400">{{ pred.category_name or pred.category }}:</span>
-                            <span class="text-white/60 ml-1">{{ pred.content[:100] }}{% if pred.content|length > 100 %}...{% endif %}</span>
+                            <span class="font-medium" style="color: var(--accent);">{{ pred.category_name or pred.category }}:</span>
+                            <span class="ml-1" style="color: var(--text-secondary);">{{ pred.content[:120] }}{% if pred.content|length > 120 %}...{% endif %}</span>
                         </div>
                         {% endfor %}
                     </div>
@@ -181,20 +173,17 @@
         {% endif %}
         
         {% elif briefing.get('markdown') %}
-        <!-- Markdown Fallback -->
-        <section class="glass rounded-2xl sm:rounded-3xl p-6 sm:p-8 mb-8 animate-slide-up">
-            <div class="prose prose-invert max-w-none" id="markdown-content">
-                {{ briefing.markdown | safe }}
-            </div>
+        <section class="card p-8 animate-in">
+            <div class="prose prose-invert max-w-none" id="markdown-content">{{ briefing.markdown | safe }}</div>
         </section>
         
         {% else %}
-        <section class="glass rounded-2xl sm:rounded-3xl p-10 sm:p-16 text-center animate-slide-up">
-            <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-3xl bg-white/5 flex items-center justify-center mx-auto mb-6">
-                <span class="text-4xl sm:text-5xl">📭</span>
+        <section class="text-center py-20 animate-in">
+            <div class="w-24 h-24 rounded-3xl flex items-center justify-center mx-auto mb-6" style="background: var(--bg-card);">
+                <span class="text-5xl">📭</span>
             </div>
-            <p class="text-white/60 text-lg mb-2">该日期暂无简报数据</p>
-            <a href="/" class="text-indigo-400 hover:text-indigo-300 text-sm transition-colors">← 返回首页</a>
+            <p class="text-lg mb-2" style="color: var(--text-secondary);">该日期暂无简报数据</p>
+            <a href="/" class="text-sm transition-colors" style="color: var(--accent);">← 返回首页</a>
         </section>
         {% endif %}
         
@@ -205,9 +194,20 @@
 {% block extra_scripts %}
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script>
-    const mdContent = document.getElementById('markdown-content');
-    if (mdContent && mdContent.textContent.trim().startsWith('#')) {
-        mdContent.innerHTML = marked.parse(mdContent.textContent);
-    }
+const mdContent = document.getElementById('markdown-content');
+if (mdContent && mdContent.textContent.trim().startsWith('#')) {
+    mdContent.innerHTML = marked.parse(mdContent.textContent);
+}
+
+// Smooth scroll for category navigation
+document.querySelectorAll('.category-pill').forEach(pill => {
+    pill.addEventListener('click', (e) => {
+        e.preventDefault();
+        const target = document.querySelector(pill.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    });
+});
 </script>
 {% endblock %}

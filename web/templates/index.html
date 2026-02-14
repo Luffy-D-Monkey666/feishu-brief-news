@@ -1,74 +1,130 @@
 {% extends "base.html" %}
 
-{% block title %}每日全球科技简报{% endblock %}
+{% block title %}全球科技简报 · 每日 AI 驱动的科技洞察{% endblock %}
 
 {% block content %}
-<div class="hero-bg min-h-screen">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-16 relative z-10">
+<div class="min-h-screen relative overflow-hidden">
+    
+    <!-- Background Glow Effects -->
+    <div class="hero-glow" style="top: -200px; left: -100px;"></div>
+    <div class="hero-glow" style="top: 200px; right: -200px; background: radial-gradient(circle, rgba(118,75,162,0.12) 0%, transparent 70%);"></div>
+    
+    <!-- Navigation -->
+    <nav class="nav-blur fixed top-0 left-0 right-0 z-50 safe-top">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <span class="text-2xl">📰</span>
+                <span class="font-semibold text-lg hidden sm:block">科技简报</span>
+            </div>
+            {% if latest_date %}
+            <a href="/briefing/{{ latest_date }}" class="btn-primary text-sm py-2 px-5">
+                今日简报
+            </a>
+            {% endif %}
+        </div>
+    </nav>
+    
+    <div class="max-w-6xl mx-auto px-6 pt-32 pb-20 relative z-10">
         
         <!-- Hero Section -->
-        <header class="text-center mb-12 sm:mb-20 animate-fade-in">
-            <div class="inline-flex items-center justify-center w-20 h-20 sm:w-24 sm:h-24 rounded-3xl bg-gradient-to-br from-indigo-500 to-purple-600 mb-6 sm:mb-8 shadow-2xl">
-                <span class="text-4xl sm:text-5xl">📰</span>
+        <header class="text-center mb-24 animate-in">
+            <div class="mb-8">
+                <span class="inline-block px-4 py-2 rounded-full text-sm font-medium" 
+                      style="background: rgba(0,113,227,0.15); color: #4da3ff;">
+                    🤖 AI 驱动 · 每日更新
+                </span>
             </div>
-            <h1 class="text-4xl sm:text-5xl lg:text-7xl font-bold mb-4 sm:mb-6 tracking-tight">
+            
+            <h1 class="text-5xl sm:text-6xl lg:text-8xl font-bold tracking-tight mb-6 leading-[1.1]">
                 <span class="gradient-text">全球科技简报</span>
             </h1>
-            <p class="text-lg sm:text-xl text-white/60 mb-2">Daily Global Tech Briefing</p>
-            <p class="text-sm sm:text-base text-white/40">AI 驱动 · 全球视野 · 深度分析</p>
+            
+            <p class="text-xl sm:text-2xl mb-4" style="color: var(--text-secondary);">
+                Daily Global Tech Briefing
+            </p>
+            
+            <p class="text-base sm:text-lg max-w-2xl mx-auto" style="color: var(--text-tertiary);">
+                从 66+ 全球顶级科技媒体聚合资讯，AI 智能翻译、分类、去重、深度分析
+            </p>
         </header>
         
         <!-- Main CTA -->
         {% if latest_date %}
-        <div class="flex justify-center mb-12 sm:mb-20 animate-slide-up" style="animation-delay: 0.2s">
-            <a href="/briefing/{{ latest_date }}" 
-               class="btn-primary group flex items-center gap-4 px-8 sm:px-12 py-5 sm:py-6 rounded-2xl text-white font-semibold text-lg sm:text-xl shadow-2xl">
-                <span class="text-2xl sm:text-3xl group-hover:scale-110 transition-transform">🚀</span>
-                <span class="text-left">
-                    <span class="block text-base sm:text-lg opacity-90">查看最新简报</span>
-                    <span class="block text-sm sm:text-base opacity-60 font-normal">{{ latest_date[:4] }}-{{ latest_date[4:6] }}-{{ latest_date[6:] }}</span>
-                </span>
-                <svg class="w-5 h-5 sm:w-6 sm:h-6 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-32 animate-in" style="animation-delay: 0.15s;">
+            <a href="/briefing/{{ latest_date }}" class="btn-primary text-lg px-10 py-4 group">
+                <span>查看最新简报</span>
+                <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
                 </svg>
             </a>
+            <span class="text-sm" style="color: var(--text-tertiary);">
+                {{ latest_date[:4] }}.{{ latest_date[4:6] }}.{{ latest_date[6:] }}
+            </span>
         </div>
         {% endif %}
         
-        <!-- Features Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-12 sm:mb-20 max-w-4xl mx-auto">
-            <div class="glass rounded-2xl p-6 sm:p-8 card-hover animate-slide-up" style="animation-delay: 0.3s">
-                <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center mb-4 sm:mb-5">
-                    <span class="text-3xl sm:text-4xl">🌍</span>
-                </div>
-                <h3 class="text-lg sm:text-xl font-semibold text-white mb-2">全球覆盖</h3>
-                <p class="text-sm sm:text-base text-white/50 leading-relaxed">66+ 新闻源，覆盖中美欧日韩等主要科技媒体</p>
+        <!-- Stats Section -->
+        <section class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-32 animate-in" style="animation-delay: 0.2s;">
+            <div class="card p-6 sm:p-8 text-center">
+                <p class="stat-number gradient-text-color">66+</p>
+                <p class="text-sm mt-2" style="color: var(--text-tertiary);">全球新闻源</p>
             </div>
+            <div class="card p-6 sm:p-8 text-center">
+                <p class="stat-number gradient-text-color">12</p>
+                <p class="text-sm mt-2" style="color: var(--text-tertiary);">覆盖领域</p>
+            </div>
+            <div class="card p-6 sm:p-8 text-center">
+                <p class="stat-number gradient-text-color">4</p>
+                <p class="text-sm mt-2" style="color: var(--text-tertiary);">预测维度</p>
+            </div>
+            <div class="card p-6 sm:p-8 text-center">
+                <p class="stat-number gradient-text-color">06:00</p>
+                <p class="text-sm mt-2" style="color: var(--text-tertiary);">每日更新</p>
+            </div>
+        </section>
+        
+        <!-- Features Section -->
+        <section class="mb-32 animate-in" style="animation-delay: 0.25s;">
+            <h2 class="section-title text-center mb-12">为什么选择科技简报</h2>
             
-            <div class="glass rounded-2xl p-6 sm:p-8 card-hover animate-slide-up" style="animation-delay: 0.4s">
-                <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center mb-4 sm:mb-5">
-                    <span class="text-3xl sm:text-4xl">🤖</span>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="card p-8">
+                    <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-5" style="background: rgba(59,130,246,0.15);">
+                        <span class="text-3xl">🌍</span>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">全球视野</h3>
+                    <p style="color: var(--text-secondary); line-height: 1.7;">
+                        覆盖中美欧日韩等主要科技媒体，一站式获取全球科技动态
+                    </p>
                 </div>
-                <h3 class="text-lg sm:text-xl font-semibold text-white mb-2">AI 处理</h3>
-                <p class="text-sm sm:text-base text-white/50 leading-relaxed">智能翻译、分类、去重、摘要，深度分析</p>
-            </div>
-            
-            <div class="glass rounded-2xl p-6 sm:p-8 card-hover animate-slide-up" style="animation-delay: 0.5s">
-                <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 flex items-center justify-center mb-4 sm:mb-5">
-                    <span class="text-3xl sm:text-4xl">🔮</span>
+                
+                <div class="card p-8">
+                    <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-5" style="background: rgba(139,92,246,0.15);">
+                        <span class="text-3xl">🤖</span>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">AI 驱动</h3>
+                    <p style="color: var(--text-secondary); line-height: 1.7;">
+                        智能翻译、自动分类、去重处理、摘要提取，节省 90% 阅读时间
+                    </p>
                 </div>
-                <h3 class="text-lg sm:text-xl font-semibold text-white mb-2">趋势预测</h3>
-                <p class="text-sm sm:text-base text-white/50 leading-relaxed">1周 / 1月 / 半年 / 1年多时间维度预测</p>
+                
+                <div class="card p-8">
+                    <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-5" style="background: rgba(234,179,8,0.15);">
+                        <span class="text-3xl">🔮</span>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">趋势预测</h3>
+                    <p style="color: var(--text-secondary); line-height: 1.7;">
+                        基于新闻数据的 AI 预测分析，洞察 1 周到 1 年的行业趋势
+                    </p>
+                </div>
             </div>
-        </div>
+        </section>
         
         <!-- Categories Section -->
-        <div class="max-w-4xl mx-auto mb-12 sm:mb-20 animate-slide-up" style="animation-delay: 0.6s">
-            <h2 class="text-xl sm:text-2xl font-semibold text-white mb-6 sm:mb-8 text-center flex items-center justify-center gap-3">
-                <span class="text-2xl">📊</span>
-                <span>覆盖领域</span>
-            </h2>
-            <div class="flex flex-wrap justify-center gap-2 sm:gap-3">
+        <section class="mb-32 animate-in" style="animation-delay: 0.3s;">
+            <h2 class="section-title text-center mb-8">覆盖 12 大科技领域</h2>
+            
+            <div class="flex flex-wrap justify-center gap-3">
                 <span class="tag tag-ai">🤖 AI</span>
                 <span class="tag tag-robotics">🦾 机器人</span>
                 <span class="tag tag-embodied">👓 具身智能</span>
@@ -82,59 +138,82 @@
                 <span class="tag tag-electronics">📱 消费电子</span>
                 <span class="tag tag-people">🎤 大佬发言</span>
             </div>
-        </div>
+        </section>
         
         <!-- Archive Section -->
         {% if dates %}
-        <div class="max-w-4xl mx-auto animate-slide-up" style="animation-delay: 0.7s">
-            <h2 class="text-xl sm:text-2xl font-semibold text-white mb-6 sm:mb-8 text-center flex items-center justify-center gap-3">
-                <span class="text-2xl">📅</span>
-                <span>历史简报</span>
-            </h2>
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
-                {% for date in dates[:12] %}
-                <a href="/briefing/{{ date }}" 
-                   class="glass group block p-4 sm:p-5 text-center rounded-xl card-hover">
-                    <span class="block text-xs text-white/40 mb-1">{{ date[:4] }}</span>
-                    <span class="block text-lg sm:text-xl font-semibold text-white group-hover:text-indigo-400 transition-colors">{{ date[4:6] }}.{{ date[6:] }}</span>
+        <section class="animate-in" style="animation-delay: 0.35s;">
+            <h2 class="section-title text-center mb-10">📅 历史简报</h2>
+            
+            <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3 sm:gap-4">
+                {% for date in dates[:18] %}
+                <a href="/briefing/{{ date }}" class="card group p-4 sm:p-5 text-center">
+                    <span class="block text-xs mb-1" style="color: var(--text-tertiary);">{{ date[:4] }}</span>
+                    <span class="block text-lg sm:text-xl font-semibold group-hover:text-blue-400 transition-colors">
+                        {{ date[4:6] }}.{{ date[6:] }}
+                    </span>
                 </a>
                 {% endfor %}
             </div>
             
-            {% if dates|length > 12 %}
+            {% if dates|length > 18 %}
             <div class="text-center mt-8">
-                <button onclick="showMoreDates()" id="show-more-btn" class="text-white/50 hover:text-white text-sm transition-colors">
-                    查看更多 ↓
+                <button onclick="toggleMoreDates()" id="toggle-btn" class="btn-secondary text-sm">
+                    显示更多
                 </button>
             </div>
-            <div id="more-dates" class="hidden grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4 mt-4">
-                {% for date in dates[12:] %}
-                <a href="/briefing/{{ date }}" 
-                   class="glass group block p-4 sm:p-5 text-center rounded-xl card-hover">
-                    <span class="block text-xs text-white/40 mb-1">{{ date[:4] }}</span>
-                    <span class="block text-lg sm:text-xl font-semibold text-white group-hover:text-indigo-400 transition-colors">{{ date[4:6] }}.{{ date[6:] }}</span>
+            <div id="more-dates" class="hidden grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3 sm:gap-4 mt-4">
+                {% for date in dates[18:] %}
+                <a href="/briefing/{{ date }}" class="card group p-4 sm:p-5 text-center">
+                    <span class="block text-xs mb-1" style="color: var(--text-tertiary);">{{ date[:4] }}</span>
+                    <span class="block text-lg sm:text-xl font-semibold group-hover:text-blue-400 transition-colors">
+                        {{ date[4:6] }}.{{ date[6:] }}
+                    </span>
                 </a>
                 {% endfor %}
             </div>
             {% endif %}
-        </div>
+        </section>
         {% else %}
-        <div class="text-center py-16 sm:py-24 animate-slide-up" style="animation-delay: 0.7s">
-            <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-3xl bg-white/5 flex items-center justify-center mx-auto mb-6">
-                <span class="text-4xl sm:text-5xl">📭</span>
+        <section class="text-center py-20 animate-in" style="animation-delay: 0.35s;">
+            <div class="w-24 h-24 rounded-3xl flex items-center justify-center mx-auto mb-6" style="background: var(--bg-card);">
+                <span class="text-5xl">📭</span>
             </div>
-            <p class="text-white/60 text-lg mb-2">暂无简报数据</p>
-            <p class="text-white/40 text-sm">简报将在每天早上 06:00 自动生成</p>
-        </div>
+            <p class="text-lg mb-2" style="color: var(--text-secondary);">暂无简报数据</p>
+            <p class="text-sm" style="color: var(--text-tertiary);">简报将在每天早上 06:00 自动生成</p>
+        </section>
         {% endif %}
         
     </div>
 </div>
 
 <script>
-function showMoreDates() {
-    document.getElementById('more-dates').classList.remove('hidden');
-    document.getElementById('show-more-btn').classList.add('hidden');
+function toggleMoreDates() {
+    const el = document.getElementById('more-dates');
+    const btn = document.getElementById('toggle-btn');
+    if (el.classList.contains('hidden')) {
+        el.classList.remove('hidden');
+        btn.textContent = '收起';
+    } else {
+        el.classList.add('hidden');
+        btn.textContent = '显示更多';
+    }
 }
+
+// Intersection Observer for animations
+document.addEventListener('DOMContentLoaded', () => {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.animationPlayState = 'running';
+            }
+        });
+    }, { threshold: 0.1 });
+    
+    document.querySelectorAll('.animate-in').forEach(el => {
+        el.style.animationPlayState = 'paused';
+        observer.observe(el);
+    });
+});
 </script>
 {% endblock %}
