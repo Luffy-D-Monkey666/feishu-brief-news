@@ -1,0 +1,210 @@
+# 关键人物清单 - 科技圈大佬发言追踪
+
+tech_leaders:
+  # US - AI & Big Tech
+  - name: Elon Musk
+    name_zh: 埃隆·马斯克
+    company: Tesla / SpaceX / xAI / X
+    focus: [ai, auto, robotics, space]
+    platforms:
+      twitter: elonmusk
+      
+  - name: Sam Altman
+    name_zh: 萨姆·奥特曼
+    company: OpenAI
+    focus: [ai]
+    platforms:
+      twitter: sama
+      blog: https://blog.samaltman.com
+      
+  - name: Jensen Huang
+    name_zh: 黄仁勋
+    company: NVIDIA
+    focus: [ai, semiconductor]
+    platforms:
+      twitter: null  # 不活跃
+      note: 主要通过公开演讲和采访
+      
+  - name: Satya Nadella
+    name_zh: 萨提亚·纳德拉
+    company: Microsoft
+    focus: [ai, cloud, enterprise]
+    platforms:
+      twitter: satloyd
+      linkedin: satyanadella
+      
+  - name: Sundar Pichai
+    name_zh: 桑达尔·皮查伊
+    company: Google / Alphabet
+    focus: [ai, search, cloud]
+    platforms:
+      twitter: sundarpichai
+      
+  - name: Mark Zuckerberg
+    name_zh: 马克·扎克伯格
+    company: Meta
+    focus: [ai, metaverse, social]
+    platforms:
+      instagram: zuck
+      threads: zuck
+      
+  - name: Tim Cook
+    name_zh: 蒂姆·库克
+    company: Apple
+    focus: [consumer_electronics, ai]
+    platforms:
+      twitter: tim_cook
+      
+  - name: Dario Amodei
+    name_zh: 达里奥·阿莫代伊
+    company: Anthropic
+    focus: [ai, safety]
+    platforms:
+      twitter: DarioAmodei
+      
+  - name: Demis Hassabis
+    name_zh: 德米斯·哈萨比斯
+    company: Google DeepMind
+    focus: [ai, research]
+    platforms:
+      twitter: demaboris
+      
+  - name: Yann LeCun
+    name_zh: 杨立昆
+    company: Meta AI
+    focus: [ai, research]
+    platforms:
+      twitter: ylecun
+
+  # China - Tech Giants
+  - name: 雷军
+    name_en: Lei Jun
+    company: 小米
+    focus: [consumer_electronics, auto, ai]
+    platforms:
+      weibo: leijun
+      douyin: leijun
+      
+  - name: 李想
+    name_en: Li Xiang
+    company: 理想汽车
+    focus: [auto, ai]
+    platforms:
+      weibo: lixiang
+      
+  - name: 何小鹏
+    name_en: He Xiaopeng
+    company: 小鹏汽车
+    focus: [auto, ai, robotics]
+    platforms:
+      weibo: hexiaopeng
+      
+  - name: 余承东
+    name_en: Richard Yu
+    company: 华为
+    focus: [consumer_electronics, auto, ai]
+    platforms:
+      weibo: yuchengdong
+      
+  - name: 李彦宏
+    name_en: Robin Li
+    company: 百度
+    focus: [ai, search, auto]
+    platforms:
+      weibo: null
+      note: 主要通过公开演讲和采访
+      
+  - name: 王传福
+    name_en: Wang Chuanfu
+    company: 比亚迪
+    focus: [auto, battery, semiconductor]
+    platforms:
+      note: 主要通过公开演讲
+      
+  - name: 马化腾
+    name_en: Pony Ma
+    company: 腾讯
+    focus: [social, gaming, ai]
+    platforms:
+      note: 内部讲话和采访，极少公开发言
+      
+  - name: 曾毓群
+    name_en: Robin Zeng
+    company: 宁德时代
+    focus: [battery, auto]
+    platforms:
+      note: 公开演讲和采访
+      
+  - name: 周鸿祎
+    name_en: Zhou Hongyi
+    company: 360
+    focus: [ai, security]
+    platforms:
+      weibo: zhouhongyi
+      douyin: zhouhongyi
+      
+  - name: 傅盛
+    name_en: Fu Sheng
+    company: 猎豹移动 / 猎户星空
+    focus: [ai, robotics]
+    platforms:
+      weibo: fusheng
+      
+  - name: 张一鸣
+    name_en: Zhang Yiming
+    company: 字节跳动
+    focus: [ai, social]
+    platforms:
+      note: 已退休，极少公开发言
+      
+  - name: 黄峥
+    name_en: Colin Huang
+    company: 拼多多
+    focus: [ecommerce]
+    platforms:
+      note: 已退休，极少公开发言
+
+  # Auto Industry
+  - name: Mary Barra
+    name_zh: 玛丽·博拉
+    company: GM
+    focus: [auto]
+    platforms:
+      twitter: mtbarra
+      
+  - name: Jim Farley
+    name_zh: 吉姆·法利
+    company: Ford
+    focus: [auto]
+    platforms:
+      twitter: jimfarley98
+
+  # Semiconductor
+  - name: Pat Gelsinger
+    name_zh: 帕特·基辛格
+    company: Intel
+    focus: [semiconductor]
+    platforms:
+      twitter: PGelsinger
+      
+  - name: Lisa Su
+    name_zh: 苏姿丰
+    company: AMD
+    focus: [semiconductor, ai]
+    platforms:
+      twitter: LisaSu
+
+  # VC & Investment
+  - name: Marc Andreessen
+    name_zh: 马克·安德森
+    company: a16z
+    focus: [investment, ai]
+    platforms:
+      twitter: pmarca
+      
+  - name: Sam Bankman-Fried
+    name_zh: null
+    company: null
+    focus: null
+    platforms: null
+    note: 已入狱，不再追踪

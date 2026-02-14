@@ -1,0 +1,396 @@
+# 新闻分类配置
+
+categories:
+  - id: ai
+    name: AI类
+    name_en: AI & Machine Learning
+    icon: 🤖
+    description: AI技术、Agent发展、AI Coding、AI新功能
+    keywords:
+      - AI
+      - 人工智能
+      - artificial intelligence
+      - machine learning
+      - 机器学习
+      - deep learning
+      - 深度学习
+      - LLM
+      - 大语言模型
+      - large language model
+      - GPT
+      - Claude
+      - Gemini
+      - ChatGPT
+      - agent
+      - 智能体
+      - AI coding
+      - Copilot
+      - 生成式AI
+      - generative AI
+      - AIGC
+      - prompt
+      - transformer
+      - neural network
+      - 神经网络
+      - diffusion
+      - 扩散模型
+      - AGI
+      - 通用人工智能
+
+  - id: robotics
+    name: 机器人类
+    name_en: Robotics
+    icon: 🦾
+    description: 人形机器人、工业机器人、军用机器人、机器狗、供应链
+    keywords:
+      - 机器人
+      - robot
+      - robotics
+      - 人形机器人
+      - humanoid
+      - 机器狗
+      - Boston Dynamics
+      - 波士顿动力
+      - 工业机器人
+      - industrial robot
+      - 军用机器人
+      - military robot
+      - 协作机器人
+      - cobot
+      - 服务机器人
+      - 特斯拉机器人
+      - Optimus
+      - Figure
+      - 优必选
+      - 达闼
+      - 傅里叶
+
+  - id: embodied_ai
+    name: 具身智能类
+    name_en: Embodied AI
+    icon: 👓
+    description: AI眼镜、可穿戴智能设备、新型交互
+    keywords:
+      - 具身智能
+      - embodied AI
+      - AI眼镜
+      - smart glasses
+      - AR眼镜
+      - AR glasses
+      - Meta Ray-Ban
+      - 可穿戴
+      - wearable
+      - 智能戒指
+      - smart ring
+      - 脑机接口
+      - BCI
+      - brain computer interface
+      - Neuralink
+      - 空间计算
+      - spatial computing
+      - Vision Pro
+
+  - id: semiconductor
+    name: 半导体行业类
+    name_en: Semiconductor
+    icon: 💾
+    description: 芯片、存储、自研芯片、制程、设备
+    keywords:
+      - 半导体
+      - semiconductor
+      - 芯片
+      - chip
+      - 处理器
+      - processor
+      - CPU
+      - GPU
+      - NPU
+      - TPU
+      - 存储
+      - memory
+      - DRAM
+      - NAND
+      - SSD
+      - 制程
+      - nm
+      - 纳米
+      - 光刻
+      - lithography
+      - EUV
+      - ASML
+      - 台积电
+      - TSMC
+      - 三星半导体
+      - Samsung Foundry
+      - Intel
+      - AMD
+      - NVIDIA
+      - 高通
+      - Qualcomm
+      - 联发科
+      - MediaTek
+      - 海思
+      - HiSilicon
+      - 中芯国际
+      - SMIC
+
+  - id: auto
+    name: 汽车类
+    name_en: Automotive
+    icon: 🚗
+    description: 新能源车、燃油车、销量、供应链、自动驾驶
+    keywords:
+      - 汽车
+      - car
+      - automotive
+      - 新能源
+      - EV
+      - electric vehicle
+      - 电动车
+      - 电动汽车
+      - 混动
+      - hybrid
+      - 插电混动
+      - PHEV
+      - 增程
+      - 燃油车
+      - 销量
+      - 交付
+      - delivery
+      - 自动驾驶
+      - autonomous driving
+      - self-driving
+      - FSD
+      - 特斯拉
+      - Tesla
+      - 比亚迪
+      - BYD
+      - 蔚来
+      - NIO
+      - 理想
+      - Li Auto
+      - 小鹏
+      - XPeng
+      - 小米汽车
+      - 华为汽车
+      - 问界
+      - 极氪
+      - 零跑
+      - 哪吒
+      - 宝马
+      - BMW
+      - 奔驰
+      - Mercedes
+      - 大众
+      - VW
+      - Volkswagen
+      - 丰田
+      - Toyota
+      - 本田
+      - Honda
+      - 通用
+      - GM
+      - 福特
+      - Ford
+
+  - id: health
+    name: 健康医疗类
+    name_en: Healthcare
+    icon: 🏥
+    description: 生物科技、医疗器械、制药、医疗AI
+    keywords:
+      - 医疗
+      - healthcare
+      - health
+      - 医药
+      - pharmaceutical
+      - 生物科技
+      - biotech
+      - 基因
+      - gene
+      - genomics
+      - 新药
+      - drug
+      - FDA
+      - 临床试验
+      - clinical trial
+      - 医疗器械
+      - medical device
+      - 医疗AI
+      - 数字医疗
+      - digital health
+      - 远程医疗
+      - telemedicine
+      - 癌症
+      - cancer
+      - 疫苗
+      - vaccine
+
+  - id: economy
+    name: 经济政策类
+    name_en: Economic Policy
+    icon: 📊
+    description: 宏观经济、产业政策、贸易政策
+    keywords:
+      - 经济
+      - economy
+      - economic
+      - GDP
+      - 通胀
+      - inflation
+      - 利率
+      - interest rate
+      - 央行
+      - central bank
+      - 美联储
+      - Fed
+      - Federal Reserve
+      - 产业政策
+      - industrial policy
+      - 贸易
+      - trade
+      - 关税
+      - tariff
+      - 制裁
+      - sanction
+      - 出口管制
+      - export control
+
+  - id: business
+    name: 商业科技类
+    name_en: Business & Tech
+    icon: 💼
+    description: 企业动态、并购、融资、上市
+    keywords:
+      - 收购
+      - acquisition
+      - 并购
+      - merger
+      - M&A
+      - 融资
+      - funding
+      - 投资
+      - investment
+      - 上市
+      - IPO
+      - 裁员
+      - layoff
+      - 重组
+      - restructure
+      - 战略
+      - strategy
+      - 合作
+      - partnership
+
+  - id: politics
+    name: 政治政策类
+    name_en: Politics & Policy
+    icon: 🏛️
+    description: 科技监管、地缘政治、国际关系
+    keywords:
+      - 监管
+      - regulation
+      - 政策
+      - policy
+      - 法规
+      - law
+      - 立法
+      - legislation
+      - 反垄断
+      - antitrust
+      - 数据保护
+      - data protection
+      - 隐私
+      - privacy
+      - GDPR
+      - 地缘政治
+      - geopolitics
+      - 中美
+      - US-China
+      - 脱钩
+      - decoupling
+
+  - id: investment
+    name: 投资财经类
+    name_en: Investment & Finance
+    icon: 📈
+    description: 股市、风投、IPO、财报
+    keywords:
+      - 股票
+      - stock
+      - 股市
+      - 股价
+      - 市值
+      - market cap
+      - 财报
+      - earnings
+      - quarterly report
+      - 风投
+      - VC
+      - venture capital
+      - PE
+      - 私募
+      - 基金
+      - fund
+      - 纳斯达克
+      - NASDAQ
+      - 标普
+      - S&P
+      - 道琼斯
+      - Dow Jones
+      - A股
+      - 港股
+
+  - id: consumer_electronics
+    name: 消费电子类
+    name_en: Consumer Electronics
+    icon: 📱
+    description: 手机、电脑、家电、智能家居
+    keywords:
+      - 手机
+      - smartphone
+      - phone
+      - iPhone
+      - 安卓
+      - Android
+      - 电脑
+      - computer
+      - PC
+      - laptop
+      - 笔记本
+      - Mac
+      - 平板
+      - tablet
+      - iPad
+      - 耳机
+      - earbuds
+      - AirPods
+      - 智能家居
+      - smart home
+      - 家电
+      - appliance
+      - 电视
+      - TV
+      - 显示器
+      - monitor
+
+  - id: key_people
+    name: 关键人物发言
+    name_en: Key Figure Statements
+    icon: 🎤
+    description: 科技大佬的观点、预测、表态
+    keywords:
+      - 表示
+      - 称
+      - 认为
+      - 预测
+      - 声称
+      - 宣布
+      - 透露
+      - said
+      - says
+      - announced
+      - revealed
+      - predicted
+      - believes
+    note: 此分类主要通过人物匹配，而非关键词

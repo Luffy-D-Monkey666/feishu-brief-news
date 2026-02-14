@@ -1,0 +1,385 @@
+# 全球科技新闻源配置
+# 策略：先广后精，宁多勿漏
+
+china:
+  general_tech:
+    - name: 36氪
+      url: https://36kr.com
+      rss: https://36kr.com/feed
+      type: rss
+      lang: zh
+      
+    - name: 虎嗅
+      url: https://www.huxiu.com
+      rss: https://www.huxiu.com/rss/0.xml
+      type: rss
+      lang: zh
+      
+    - name: 钛媒体
+      url: https://www.tmtpost.com
+      rss: https://www.tmtpost.com/feed
+      type: rss
+      lang: zh
+      
+    - name: 极客公园
+      url: https://www.geekpark.net
+      rss: https://www.geekpark.net/rss
+      type: rss
+      lang: zh
+      
+    - name: PingWest品玩
+      url: https://www.pingwest.com
+      rss: https://www.pingwest.com/feed
+      type: rss
+      lang: zh
+      
+    - name: 爱范儿
+      url: https://www.ifanr.com
+      rss: https://www.ifanr.com/feed
+      type: rss
+      lang: zh
+
+  ai_focused:
+    - name: 机器之心
+      url: https://www.jiqizhixin.com
+      rss: https://www.jiqizhixin.com/rss
+      type: rss
+      lang: zh
+      
+    - name: 量子位
+      url: https://www.qbitai.com
+      rss: https://www.qbitai.com/feed
+      type: rss
+      lang: zh
+      
+    - name: 新智元
+      url: https://www.xinzhiyuan.com
+      type: web
+      lang: zh
+      
+    - name: 智东西
+      url: https://zhidx.com
+      type: web
+      lang: zh
+
+  finance_business:
+    - name: 财新网
+      url: https://www.caixin.com
+      type: web
+      lang: zh
+      
+    - name: 第一财经
+      url: https://www.yicai.com
+      type: web
+      lang: zh
+      
+    - name: 界面新闻
+      url: https://www.jiemian.com
+      rss: https://www.jiemian.com/rss/index.xml
+      type: rss
+      lang: zh
+
+  auto:
+    - name: 汽车之家
+      url: https://www.autohome.com.cn
+      type: web
+      lang: zh
+      
+    - name: 42号车库
+      url: https://www.42how.com
+      type: web
+      lang: zh
+      
+    - name: 电动邦
+      url: https://www.diandong.com
+      type: web
+      lang: zh
+
+  semiconductor:
+    - name: 芯智讯
+      url: https://www.icsmart.cn
+      type: web
+      lang: zh
+      
+    - name: 半导体行业观察
+      url: https://www.icviews.com
+      type: web
+      lang: zh
+      
+    - name: 集微网
+      url: https://www.jiweinet.com
+      type: web
+      lang: zh
+
+  health:
+    - name: 丁香园
+      url: https://www.dxy.cn
+      type: web
+      lang: zh
+      
+    - name: 健康界
+      url: https://www.cn-healthcare.com
+      type: web
+      lang: zh
+
+  portals:
+    - name: 新浪科技
+      url: https://tech.sina.com.cn
+      rss: https://feed.sina.com.cn/tech/rollnews.xml
+      type: rss
+      lang: zh
+      
+    - name: 网易科技
+      url: https://tech.163.com
+      type: web
+      lang: zh
+      
+    - name: 腾讯科技
+      url: https://tech.qq.com
+      type: web
+      lang: zh
+
+us:
+  general_tech:
+    - name: TechCrunch
+      url: https://techcrunch.com
+      rss: https://techcrunch.com/feed/
+      type: rss
+      lang: en
+      
+    - name: The Verge
+      url: https://www.theverge.com
+      rss: https://www.theverge.com/rss/index.xml
+      type: rss
+      lang: en
+      
+    - name: Ars Technica
+      url: https://arstechnica.com
+      rss: https://feeds.arstechnica.com/arstechnica/index
+      type: rss
+      lang: en
+      
+    - name: Wired
+      url: https://www.wired.com
+      rss: https://www.wired.com/feed/rss
+      type: rss
+      lang: en
+      
+    - name: Engadget
+      url: https://www.engadget.com
+      rss: https://www.engadget.com/rss.xml
+      type: rss
+      lang: en
+      
+    - name: CNET
+      url: https://www.cnet.com
+      rss: https://www.cnet.com/rss/news/
+      type: rss
+      lang: en
+
+  ai_focused:
+    - name: VentureBeat AI
+      url: https://venturebeat.com/ai/
+      rss: https://venturebeat.com/category/ai/feed/
+      type: rss
+      lang: en
+      
+    - name: MIT Technology Review
+      url: https://www.technologyreview.com
+      rss: https://www.technologyreview.com/feed/
+      type: rss
+      lang: en
+      
+    - name: The AI Report
+      url: https://theaireport.com
+      type: web
+      lang: en
+
+  finance_business:
+    - name: Bloomberg Technology
+      url: https://www.bloomberg.com/technology
+      type: web
+      lang: en
+      
+    - name: WSJ Tech
+      url: https://www.wsj.com/tech
+      type: web
+      lang: en
+      
+    - name: Reuters Technology
+      url: https://www.reuters.com/technology/
+      rss: https://www.reuters.com/technology/rss
+      type: rss
+      lang: en
+      
+    - name: CNBC Tech
+      url: https://www.cnbc.com/technology/
+      type: web
+      lang: en
+
+  semiconductor:
+    - name: AnandTech
+      url: https://www.anandtech.com
+      rss: https://www.anandtech.com/rss/
+      type: rss
+      lang: en
+      
+    - name: Tom's Hardware
+      url: https://www.tomshardware.com
+      rss: https://www.tomshardware.com/feeds/all
+      type: rss
+      lang: en
+      
+    - name: EE Times
+      url: https://www.eetimes.com
+      type: web
+      lang: en
+      
+    - name: Semiconductor Engineering
+      url: https://semiengineering.com
+      type: web
+      lang: en
+
+  auto:
+    - name: Electrek
+      url: https://electrek.co
+      rss: https://electrek.co/feed/
+      type: rss
+      lang: en
+      
+    - name: InsideEVs
+      url: https://insideevs.com
+      rss: https://insideevs.com/rss/news/
+      type: rss
+      lang: en
+      
+    - name: Automotive News
+      url: https://www.autonews.com
+      type: web
+      lang: en
+
+  health:
+    - name: STAT News
+      url: https://www.statnews.com
+      rss: https://www.statnews.com/feed/
+      type: rss
+      lang: en
+      
+    - name: FierceBiotech
+      url: https://www.fiercebiotech.com
+      type: web
+      lang: en
+
+  community:
+    - name: Hacker News
+      url: https://news.ycombinator.com
+      rss: https://hnrss.org/frontpage
+      type: rss
+      lang: en
+      
+    - name: Reddit Technology
+      url: https://www.reddit.com/r/technology/
+      rss: https://www.reddit.com/r/technology/.rss
+      type: rss
+      lang: en
+      
+    - name: Reddit Artificial
+      url: https://www.reddit.com/r/artificial/
+      rss: https://www.reddit.com/r/artificial/.rss
+      type: rss
+      lang: en
+
+japan:
+  - name: Nikkei Asia Tech
+    url: https://asia.nikkei.com/Business/Tech
+    type: web
+    lang: ja
+    
+  - name: ITmedia
+    url: https://www.itmedia.co.jp
+    rss: https://rss.itmedia.co.jp/rss/2.0/news_bursts.xml
+    type: rss
+    lang: ja
+    
+  - name: Impress Watch
+    url: https://www.watch.impress.co.jp
+    type: web
+    lang: ja
+
+korea:
+  - name: Yonhap News Tech
+    url: https://en.yna.co.kr/science-tech
+    type: web
+    lang: ko
+    
+  - name: Korea Herald Tech
+    url: https://www.koreaherald.com/list.php?ct=020500000000
+    type: web
+    lang: en
+    
+  - name: ETNews
+    url: https://english.etnews.com
+    type: web
+    lang: en
+
+europe:
+  - name: The Register
+    url: https://www.theregister.com
+    rss: https://www.theregister.com/headlines.atom
+    type: rss
+    lang: en
+    
+  - name: Tech.eu
+    url: https://tech.eu
+    rss: https://tech.eu/feed/
+    type: rss
+    lang: en
+    
+  - name: Sifted
+    url: https://sifted.eu
+    type: web
+    lang: en
+    
+  - name: Heise
+    url: https://www.heise.de
+    rss: https://www.heise.de/rss/heise-atom.xml
+    type: rss
+    lang: de
+
+asia_other:
+  - name: Tech in Asia
+    url: https://www.techinasia.com
+    rss: https://www.techinasia.com/feed
+    type: rss
+    lang: en
+    
+  - name: e27
+    url: https://e27.co
+    type: web
+    lang: en
+    
+  - name: KrASIA
+    url: https://kr-asia.com
+    type: web
+    lang: en
+    
+  - name: The Ken
+    url: https://the-ken.com
+    type: web
+    lang: en
+
+wire_services:
+  - name: Reuters
+    url: https://www.reuters.com
+    type: web
+    lang: en
+    
+  - name: AP News Tech
+    url: https://apnews.com/technology
+    type: web
+    lang: en
+    
+  - name: AFP
+    url: https://www.afp.com
+    type: web
+    lang: en

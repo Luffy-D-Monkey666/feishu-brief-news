@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}404 - 页面不存在{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-20">
+    <div class="glass max-w-lg mx-auto p-12 text-center">
+        <p class="text-6xl mb-6">🔍</p>
+        <h1 class="text-2xl font-bold text-gray-800 mb-4">页面不存在</h1>
+        <p class="text-gray-600 mb-8">您访问的简报可能还未生成，或日期格式有误。</p>
+        <a href="/" class="inline-flex items-center px-6 py-3 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors">
+            ← 返回首页
+        </a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,11 @@
+# Render.com 部署配置
+services:
+  - type: web
+    name: daily-briefing
+    runtime: python
+    buildCommand: pip install -r web/requirements.txt
+    startCommand: cd web && gunicorn app:app
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+    autoDeploy: true

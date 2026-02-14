@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+
+{% block title %}科技简报 - {{ date[:4] }}-{{ date[4:6] }}-{{ date[6:] }}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <!-- Back Link -->
+    <div class="mb-6">
+        <a href="/" class="text-white/80 hover:text-white transition-colors">
+            ← 返回首页
+        </a>
+    </div>
+    
+    <!-- Header -->
+    <header class="glass max-w-5xl mx-auto p-8 mb-8">
+        <div class="flex items-center justify-between flex-wrap gap-4">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">📰 每日全球科技简报</h1>
+                <p class="text-lg text-indigo-600 font-medium">{{ date[:4] }}年{{ date[4:6] }}月{{ date[6:] }}日</p>
+            </div>
+            <div class="text-right">
+                <p class="text-sm text-gray-500">上次更新</p>
+                <p class="text-gray-700 font-medium">{{ briefing.get('generated_at', '10:00 AM') }}</p>
+            </div>
+        </div>
+    </header>
+    
+    <div class="max-w-5xl mx-auto">
+        {% if briefing.get('articles') %}
+        <!-- Overview -->
+        <section class="glass p-8 mb-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">📊 今日概览</h2>
+            
+            <div class="grid md:grid-cols-4 gap-4 mb-6">
+                <div class="bg-indigo-50 rounded-xl p-4 text-center">
+                    <p class="text-3xl font-bold text-indigo-600">{{ briefing.total_articles or briefing.articles|length }}</p>
+                    <p class="text-sm text-gray-600">新闻总数</p>
+                </div>
+                <div class="bg-purple-50 rounded-xl p-4 text-center">
+                    <p class="text-3xl font-bold text-purple-600">{{ briefing.categories_count or 12 }}</p>
+                    <p class="text-sm text-gray-600">覆盖类别</p>
+                </div>
+                <div class="bg-green-50 rounded-xl p-4 text-center">
+                    <p class="text-3xl font-bold text-green-600">{{ briefing.sources_count or '20+' }}</p>
+                    <p class="text-sm text-gray-600">新闻来源</p>
+                </div>
+                <div class="bg-orange-50 rounded-xl p-4 text-center">
+                    <p class="text-3xl font-bold text-orange-600">{{ briefing.predictions|length if briefing.predictions else 12 }}</p>
+                    <p class="text-sm text-gray-600">预测分析</p>
+                </div>
+            </div>
+            
+            {% if briefing.get('summary') %}
+            <div class="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl p-6">
+                <h3 class="font-semibold text-gray-800 mb-3">📝 今日要点</h3>
+                <p class="text-gray-700 leading-relaxed">{{ briefing.summary }}</p>
+            </div>
+            {% endif %}
+        </section>
+        
+        <!-- Articles by Category -->
+        {% for category, articles in briefing.articles_by_category.items() if articles %}
+        <section class="glass p-8 mb-6 category-card">
+            <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center">
+                <span class="text-2xl mr-3">
+                    {% if category == 'ai' %}🤖{% elif category == 'robotics' %}🦾{% elif category == 'embodied_ai' %}👓{% elif category == 'semiconductor' %}💾{% elif category == 'auto' %}🚗{% elif category == 'health' %}🏥{% elif category == 'economy' %}📊{% elif category == 'business' %}💼{% elif category == 'politics' %}🏛️{% elif category == 'investment' %}📈{% elif category == 'consumer_electronics' %}📱{% elif category == 'key_people' %}🎤{% else %}📌{% endif %}
+                </span>
+                {% if category == 'ai' %}AI类{% elif category == 'robotics' %}机器人类{% elif category == 'embodied_ai' %}具身智能类{% elif category == 'semiconductor' %}半导体行业类{% elif category == 'auto' %}汽车类{% elif category == 'health' %}健康医疗类{% elif category == 'economy' %}经济政策类{% elif category == 'business' %}商业科技类{% elif category == 'politics' %}政治政策类{% elif category == 'investment' %}投资财经类{% elif category == 'consumer_electronics' %}消费电子类{% elif category == 'key_people' %}关键人物发言{% else %}{{ category }}{% endif %}
+                <span class="ml-3 text-sm font-normal text-gray-500">({{ articles|length }}条)</span>
+            </h2>
+            
+            <div class="space-y-6">
+                {% for article in articles %}
+                <article class="article-card p-6 bg-white rounded-xl">
+                    <!-- Title -->
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">
+                        {{ article.title_original }}
+                    </h3>
+                    {% if article.title_zh != article.title_original %}
+                    <p class="text-gray-600 mb-3">{{ article.title_zh }}</p>
+                    {% endif %}
+                    
+                    <!-- Meta -->
+                    <div class="flex flex-wrap items-center gap-4 text-sm text-gray-500 mb-4">
+                        <span class="flex items-center">
+                            <span class="mr-1">📰</span> {{ article.source }}
+                        </span>
+                        <span class="flex items-center">
+                            <span class="mr-1">🕐</span> {{ article.published_at }}
+                        </span>
+                        {% if article.mentioned_people %}
+                        <span class="flex items-center">
+                            <span class="mr-1">👤</span> {{ article.mentioned_people|join(', ') }}
+                        </span>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Summary -->
+                    <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                        <h4 class="text-sm font-semibold text-gray-700 mb-2">📋 摘要</h4>
+                        <p class="text-gray-600 leading-relaxed text-sm">{{ article.summary_zh[:500] }}{% if article.summary_zh|length > 500 %}...{% endif %}</p>
+                    </div>
+                    
+                    <!-- Key Points -->
+                    {% if article.key_points %}
+                    <div class="mb-4">
+                        <h4 class="text-sm font-semibold text-gray-700 mb-2">🔑 关键要点</h4>
+                        <ul class="space-y-1">
+                            {% for point in article.key_points[:4] %}
+                            <li class="text-sm text-gray-600 flex items-start">
+                                <span class="text-indigo-500 mr-2">•</span>
+                                {{ point }}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Impact -->
+                    {% if article.impact_analysis %}
+                    <div class="bg-amber-50 rounded-lg p-4 mb-4">
+                        <h4 class="text-sm font-semibold text-amber-800 mb-2">💡 影响分析</h4>
+                        <p class="text-sm text-amber-900/80">{{ article.impact_analysis[:300] }}{% if article.impact_analysis|length > 300 %}...{% endif %}</p>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Link -->
+                    <a href="{{ article.url }}" target="_blank" rel="noopener"
+                       class="inline-flex items-center text-sm text-indigo-600 hover:text-indigo-800 font-medium">
+                        🔗 阅读原文 →
+                    </a>
+                </article>
+                {% endfor %}
+            </div>
+        </section>
+        {% endfor %}
+        
+        <!-- Predictions -->
+        {% if briefing.get('predictions') %}
+        <section class="glass p-8 mb-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">🎯 未来预测</h2>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                {% for timeframe, title in [('week', '📆 未来一周'), ('month', '📆 未来一个月'), ('half_year', '📆 未来半年'), ('year', '📆 未来一年')] %}
+                <div class="prediction-card rounded-xl p-6">
+                    <h3 class="font-semibold text-gray-800 mb-4">{{ title }}</h3>
+                    <div class="space-y-3">
+                        {% for pred in briefing.predictions if pred.timeframe == timeframe %}
+                        <div class="text-sm">
+                            <span class="font-medium text-gray-700">{{ pred.category_name or pred.category }}:</span>
+                            <span class="text-gray-600">{{ pred.content[:100] }}{% if pred.content|length > 100 %}...{% endif %}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+        
+        {% elif briefing.get('markdown') %}
+        <!-- Markdown Fallback -->
+        <section class="glass p-8 mb-8">
+            <div class="prose max-w-none" id="markdown-content">
+                {{ briefing.markdown | safe }}
+            </div>
+        </section>
+        {% else %}
+        <section class="glass p-8 text-center">
+            <p class="text-4xl mb-4">📭</p>
+            <p class="text-gray-600">该日期暂无简报数据</p>
+        </section>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+    // Render markdown if exists
+    const mdContent = document.getElementById('markdown-content');
+    if (mdContent && mdContent.textContent.trim().startsWith('#')) {
+        mdContent.innerHTML = marked.parse(mdContent.textContent);
+    }
+</script>
+{% endblock %}
