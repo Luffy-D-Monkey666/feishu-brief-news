@@ -8,25 +8,25 @@
   "articles_by_category": {
     "ai": [{
       "id": "1",
-      "title_original": "Teamily AI 推出北美元宝派加强版，支持多人与多个AI Agents实时社交",
+      "title_original": "Teamily AI Launches Enhanced North America Version with Multi-Agent Social Features",
       "title_zh": "Teamily AI 推出北美元宝派加强版，支持多人与多个AI Agents实时社交",
       "source": "36氪",
       "published_at": "2026-02-13 07:49",
       "url": "https://36kr.com/p/3678646020940422",
-      "summary_zh": "AI原生即时通讯应用Teamily AI近期推出了其北美元宝派的加强版产品，这是一个支持多人与多个AI代理（Agents）实时协作的社交平台。该应用的核心是构建一个"代理社交网络"，让人类用户与AI代理能够在同一空间中共存、互动与协作。产品融合了即时通讯、任务管理与社交网络的功能，旨在通过AI增强人类在朋友、家庭及工作场景中的沟通与协作效率。公司已累计融资2000万美元，并计划于今年3月开启新一轮融资。",
+      "summary_zh": "AI原生即时通讯应用Teamily AI近期推出了其北美元宝派的加强版产品，这是一个支持多人与多个AI代理实时协作的社交平台。该应用的核心是构建一个代理社交网络，让人类用户与AI代理能够在同一空间中共存、互动与协作。产品融合了即时通讯、任务管理与社交网络的功能，旨在通过AI增强人类在朋友、家庭及工作场景中的沟通与协作效率。公司已累计融资2000万美元，并计划于今年3月开启新一轮融资。",
       "key_points": [
-        "支持多人与多AI代理实时协作的"代理社交网络"应用",
+        "支持多人与多AI代理实时协作的代理社交网络应用",
         "具备跨群组记忆共享、全局记忆系统等核心功能",
         "公司已累计融资2000万美元",
         "创始人认为群体智能是未来趋势"
       ],
-      "impact_analysis": "Teamily AI的推出标志着AI社交与协作领域进入一个新阶段，其"代理社交网络"概念可能重塑人机交互模式。它将推动即时通讯工具向AI原生平台演进，使AI代理从独立工具变为社交对话的实时参与者。",
+      "impact_analysis": "Teamily AI的推出标志着AI社交与协作领域进入一个新阶段，其代理社交网络概念可能重塑人机交互模式。它将推动即时通讯工具向AI原生平台演进，使AI代理从独立工具变为社交对话的实时参与者。",
       "mentioned_people": [],
       "category": "ai"
     }],
     "business": [{
       "id": "2",
-      "title_original": "商业航天核心硬件供应商获近亿元融资，团队来自中科院",
+      "title_original": "Commercial Aerospace Hardware Supplier Raises Nearly 100 Million Yuan",
       "title_zh": "商业航天核心硬件供应商获近亿元融资，团队来自中科院",
       "source": "36氪",
       "published_at": "2026-02-13 01:25",
@@ -44,7 +44,7 @@
     }],
     "consumer_electronics": [{
       "id": "3",
-      "title_original": "四年三款爆品，LiberLive U1发布、C系列累计出货超50万台",
+      "title_original": "LiberLive U1 Launch: C Series Exceeds 500K Units Shipped",
       "title_zh": "四年三款爆品，LiberLive U1发布、C系列累计出货超50万台",
       "source": "36氪",
       "published_at": "2026-02-13 03:15",
@@ -54,9 +54,9 @@
         "U1无弦吉他新品上市即获市场成功",
         "C系列累计出货量突破50万台",
         "极大降低了演奏门槛",
-        "定位从硬件供应商升级为"即时音乐表达系统"服务者"
+        "定位从硬件供应商升级为即时音乐表达系统服务者"
       ],
-      "impact_analysis": "LiberLive U1的成功发布及其系列产品的市场表现，验证了通过技术创新来大幅降低传统乐器学习与使用门槛的商业可行性，为行业开辟了庞大的"非专业"增量市场。",
+      "impact_analysis": "LiberLive U1的成功发布及其系列产品的市场表现，验证了通过技术创新来大幅降低传统乐器学习与使用门槛的商业可行性，为行业开辟了庞大的非专业增量市场。",
       "mentioned_people": [],
       "category": "consumer_electronics"
     }]
@@ -72,7 +72,7 @@
       "category": "ai",
       "category_name": "AI类",
       "timeframe": "month",
-      "content": "预测将有更多AI原生应用跟进"AI代理社交网络"概念，推出类似的多代理协作功能，形成初步的市场细分竞争。"
+      "content": "预测将有更多AI原生应用跟进AI代理社交网络概念，推出类似的多代理协作功能，形成初步的市场细分竞争。"
     },
     {
       "category": "business",
@@ -90,7 +90,7 @@
       "category": "consumer_electronics",
       "category_name": "消费电子类",
       "timeframe": "week",
-      "content": "关注LiberLive U1的首月销售数据及用户反馈，特别是社交媒体上关于其"聪明模式"易用性的真实评价。"
+      "content": "关注LiberLive U1的首月销售数据及用户反馈，特别是社交媒体上关于其聪明模式易用性的真实评价。"
     },
     {
       "category": "consumer_electronics",
