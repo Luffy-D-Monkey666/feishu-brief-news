@@ -100,7 +100,12 @@ def save_briefing_json(briefing: DailyBriefing, date_str: str) -> Path:
 async def run_daily_briefing():
     """执行每日简报生成"""
     
-    target_date = datetime.now() - timedelta(days=1)
+    # 使用北京时间 (UTC+8) 计算目标日期
+    # 生成昨天（北京时间）的简报
+    from zoneinfo import ZoneInfo
+    beijing_tz = ZoneInfo('Asia/Shanghai')
+    beijing_now = datetime.now(beijing_tz)
+    target_date = (beijing_now - timedelta(days=1)).replace(tzinfo=None)
     date_str = target_date.strftime('%Y%m%d')
     
     logger.info(f"===== Daily Briefing for {target_date.strftime('%Y-%m-%d')} =====")
