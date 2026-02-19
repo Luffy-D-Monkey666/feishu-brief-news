@@ -1,10 +1,22 @@
 # 📰 每日全球科技简报
 
-AI驱动的全球科技新闻聚合与分析平台。
+AI驱动的全球科技新闻聚合与分析平台，自动采集 → 翻译 → 分类 → 生成简报 → 发布到飞书/Web。
 
 ![Daily Briefing](https://img.shields.io/badge/status-active-success)
 ![Python](https://img.shields.io/badge/python-3.11+-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
+
+## 🚀 Quick Start
+
+```bash
+# 一键运行（本地，含自动推送）
+python auto_run.py
+
+# GitHub Actions 自动化（已配置，每日定时运行）
+# 无需手动操作，新简报自动生成并部署
+```
+
+**在线演示**: 配合 [news-brief-platform](https://github.com/Luffy-D-Monkey666/news-brief-platform) 使用
 
 ## 🌟 功能
 
@@ -78,22 +90,29 @@ export FEISHU_APP_SECRET="your-app-secret"
 
 ## 使用
 
-### 手动运行
+### 运行脚本说明
+
+| 脚本 | 用途 | 说明 |
+|------|------|------|
+| `auto_run.py` | **本地全自动** | 采集 → AI处理 → 生成 → Git推送 → 触发部署 |
+| `auto_run_github.py` | **GitHub Actions 专用** | 同上，但不含 Git 操作（由 Actions 处理） |
+| `src/main.py` | 核心处理 | 可单独调用，支持 `--date` 和 `--skip-feishu` 参数 |
 
 ```bash
-# 生成昨天的简报
-python src/main.py
+# 本地运行（推荐）
+python auto_run.py
 
-# 指定日期
+# 手动指定日期
 python src/main.py --date 2026-02-13
 
 # 跳过飞书文档生成
 python src/main.py --skip-feishu
 ```
 
-### 自动化 (OpenClaw Cron)
+### 自动化部署
 
-每天早上6点自动运行，10点前完成。
+- **GitHub Actions**: 每日定时运行 `auto_run_github.py`
+- **Render**: 检测到新提交自动重新部署
 
 ## 输出
 
@@ -162,6 +181,14 @@ python app.py
 2. 在 [Render.com](https://render.com) 创建新的 Web Service
 3. 连接你的 GitHub 仓库
 4. Render 会自动使用 `render.yaml` 配置进行部署
+
+## 📝 更新日志
+
+| 版本 | 日期 | 变更 |
+|------|------|------|
+| v1.2 | 2026-02-19 | 清理冗余文件，优化文档 |
+| v1.1 | 2026-02-14 | 添加 GitHub Actions 支持 |
+| v1.0 | 2026-02-10 | 首次发布 |
 
 ## 📝 License
 
