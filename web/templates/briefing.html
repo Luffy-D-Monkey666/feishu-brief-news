@@ -2,212 +2,604 @@
 
 {% block title %}科技简报 · {{ date[:4] }}.{{ date[4:6] }}.{{ date[6:] }}{% endblock %}
 
+{% block extra_styles %}
+<style>
+  /* ── 目录侧边栏 ── */
+  .toc-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 260px;
+    height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 40;
+    padding: 72px 0 24px 0;
+    border-right: 1px solid var(--border, rgba(255,255,255,0.08));
+    background: var(--bg-sidebar, rgba(10,10,15,0.92));
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.1) transparent;
+  }
+  .toc-sidebar::-webkit-scrollbar { width: 4px; }
+  .toc-sidebar::-webkit-scrollbar-track { background: transparent; }
+  .toc-sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+
+  /* 目录标题 */
+  .toc-header {
+    padding: 0 16px 12px 16px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-tertiary, rgba(255,255,255,0.3));
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    margin-bottom: 8px;
+  }
+
+  /* 分类行 */
+  .toc-category {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 7px 16px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary, rgba(255,255,255,0.65));
+    border-radius: 0;
+    transition: background 0.15s, color 0.15s;
+    user-select: none;
+    gap: 8px;
+  }
+  .toc-category:hover {
+    background: rgba(255,255,255,0.05);
+    color: rgba(255,255,255,0.9);
+  }
+  .toc-category.active {
+    color: var(--accent, #a78bfa);
+  }
+  .toc-category-left {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    min-width: 0;
+  }
+  .toc-category-emoji { font-size: 14px; flex-shrink: 0; }
+  .toc-category-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .toc-category-count {
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.06);
+    color: var(--text-tertiary, rgba(255,255,255,0.35));
+    flex-shrink: 0;
+  }
+  .toc-chevron {
+    flex-shrink: 0;
+    width: 14px;
+    height: 14px;
+    transition: transform 0.2s;
+    opacity: 0.4;
+  }
+  .toc-category.open .toc-chevron { transform: rotate(90deg); }
+
+  /* 文章列表 */
+  .toc-articles {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.28s cubic-bezier(0.4,0,0.2,1);
+  }
+  .toc-articles.open { max-height: 2000px; }
+
+  /* 文章条目 */
+  .toc-article {
+    display: block;
+    padding: 5px 16px 5px 38px;
+    font-size: 11.5px;
+    line-height: 1.45;
+    color: var(--text-tertiary, rgba(255,255,255,0.35));
+    cursor: pointer;
+    transition: background 0.12s, color 0.12s, border-color 0.12s;
+    border-left: 2px solid transparent;
+    margin-left: 0;
+    text-decoration: none;
+    position: relative;
+  }
+  .toc-article::before {
+    content: '';
+    position: absolute;
+    left: 28px;
+    top: 50%;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    transform: translateY(-50%);
+    transition: background 0.15s;
+  }
+  .toc-article:hover {
+    color: rgba(255,255,255,0.75);
+    background: rgba(255,255,255,0.04);
+  }
+  .toc-article:hover::before { background: rgba(255,255,255,0.4); }
+  .toc-article.reading {
+    color: var(--accent, #a78bfa);
+    border-left-color: var(--accent, #a78bfa);
+    background: rgba(167,139,250,0.07);
+  }
+  .toc-article.reading::before { background: var(--accent, #a78bfa); }
+
+  /* 进度条 */
+  .toc-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 260px;
+    height: 2px;
+    z-index: 41;
+    background: rgba(255,255,255,0.06);
+  }
+  .toc-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent, #a78bfa), #c4b5fd);
+    transition: width 0.1s;
+    width: 0%;
+  }
+
+  /* 主内容区偏移 */
+  @media (min-width: 1024px) {
+    .with-toc-main {
+      margin-left: 260px;
+    }
+    .with-toc-nav {
+      left: 260px;
+    }
+  }
+
+  /* 移动端：TOC 隐藏，用浮动按钮触发 */
+  @media (max-width: 1023px) {
+    .toc-sidebar {
+      transform: translateX(-100%);
+    }
+    .toc-sidebar.mobile-open {
+      transform: translateX(0);
+      box-shadow: 4px 0 32px rgba(0,0,0,0.5);
+    }
+    .toc-mobile-btn {
+      display: flex !important;
+    }
+    .toc-overlay {
+      display: block !important;
+    }
+    .with-toc-nav { left: 0; }
+  }
+
+  /* 移动端浮动按钮 */
+  .toc-mobile-btn {
+    display: none;
+    position: fixed;
+    bottom: 24px;
+    right: 20px;
+    z-index: 50;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--accent, #a78bfa);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(167,139,250,0.4);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .toc-mobile-btn:hover { transform: scale(1.08); }
+
+  .toc-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 39;
+    backdrop-filter: blur(2px);
+  }
+
+  /* 文章锚点高亮动画 */
+  @keyframes article-highlight {
+    0% { box-shadow: 0 0 0 0 rgba(167,139,250,0.3); }
+    50% { box-shadow: 0 0 0 8px rgba(167,139,250,0); }
+    100% { box-shadow: 0 0 0 0 rgba(167,139,250,0); }
+  }
+  .article-card:target, .article-card.highlight {
+    animation: article-highlight 1s ease-out;
+  }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="min-h-screen relative">
-    
-    <!-- Fixed Navigation -->
-    <nav class="nav-blur fixed top-0 left-0 right-0 z-50 safe-top">
-        <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-            <a href="/" class="flex items-center gap-2 text-sm font-medium hover:opacity-80 transition-opacity" style="color: var(--text-secondary);">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                </svg>
-                <span>返回</span>
-            </a>
-            <span class="text-sm font-medium" style="color: var(--text-tertiary);">{{ date[:4] }}.{{ date[4:6] }}.{{ date[6:] }}</span>
-        </div>
-    </nav>
-    
-    <div class="max-w-5xl mx-auto px-6 pt-24 pb-20">
-        
-        <!-- Header -->
-        <header class="text-center mb-16 animate-in">
-            <div class="mb-4">
-                <span class="text-5xl">📰</span>
-            </div>
-            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-4">
-                <span class="gradient-text">每日科技简报</span>
-            </h1>
-            <p class="text-2xl sm:text-3xl font-semibold gradient-text-color mb-3">
-                {{ date[:4] }}年{{ date[4:6] }}月{{ date[6:] }}日
-            </p>
-            <p class="text-sm" style="color: var(--text-tertiary);">
-                更新于 {{ briefing.get('generated_at', '06:00') }} CST
-            </p>
-        </header>
-        
-        {% if briefing.get('articles_by_category') or briefing.get('articles') %}
-        
-        <!-- Stats Grid -->
-        <section class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-16 animate-in" style="animation-delay: 0.1s;">
-            <div class="card p-6 text-center">
-                <p class="stat-number gradient-text-color">{{ briefing.total_articles or 0 }}</p>
-                <p class="text-sm mt-2" style="color: var(--text-tertiary);">新闻总数</p>
-            </div>
-            <div class="card p-6 text-center">
-                <p class="stat-number gradient-text-color">{{ briefing.categories_count or 12 }}</p>
-                <p class="text-sm mt-2" style="color: var(--text-tertiary);">覆盖类别</p>
-            </div>
-            <div class="card p-6 text-center">
-                <p class="stat-number gradient-text-color">{{ briefing.sources_count or '20+' }}</p>
-                <p class="text-sm mt-2" style="color: var(--text-tertiary);">新闻来源</p>
-            </div>
-            <div class="card p-6 text-center">
-                <p class="stat-number gradient-text-color">{{ briefing.predictions|length if briefing.predictions else 4 }}</p>
-                <p class="text-sm mt-2" style="color: var(--text-tertiary);">预测维度</p>
-            </div>
-        </section>
-        
-        <!-- Summary -->
-        {% if briefing.get('summary') %}
-        <section class="card p-8 mb-12 animate-in" style="animation-delay: 0.15s;">
-            <h2 class="text-xl font-semibold mb-4 flex items-center gap-2">
-                <span>📝</span> 今日要点
-            </h2>
-            <p class="leading-relaxed" style="color: var(--text-secondary);">{{ briefing.summary }}</p>
-        </section>
-        {% endif %}
-        
-        <!-- Category Navigation -->
-        <nav class="category-nav hide-scrollbar mb-8 animate-in" style="animation-delay: 0.2s;">
-            {% for category, articles in briefing.articles_by_category.items() if articles %}
-            <a href="#{{ category }}" class="category-pill">
-                {% if category == 'ai' %}🤖 AI{% elif category == 'robotics' %}🦾 机器人{% elif category == 'embodied_ai' %}👓 具身智能{% elif category == 'semiconductor' %}💾 半导体{% elif category == 'auto' %}🚗 汽车{% elif category == 'health' %}🏥 医疗{% elif category == 'economy' %}📊 经济{% elif category == 'business' %}💼 商业{% elif category == 'politics' %}🏛️ 政治{% elif category == 'investment' %}📈 投资{% elif category == 'consumer_electronics' %}📱 消费电子{% elif category == 'key_people' %}🎤 人物{% else %}📌 {{ category }}{% endif %}
-                <span class="ml-1 opacity-50">{{ articles|length }}</span>
-            </a>
-            {% endfor %}
-        </nav>
-        
-        <!-- Articles by Category -->
-        {% for category, articles in briefing.articles_by_category.items() if articles %}
-        <section id="{{ category }}" class="mb-12 animate-in" style="animation-delay: {{ 0.25 + loop.index * 0.05 }}s;">
-            <div class="flex items-center gap-3 mb-6">
-                <span class="text-2xl">
-                    {% if category == 'ai' %}🤖{% elif category == 'robotics' %}🦾{% elif category == 'embodied_ai' %}👓{% elif category == 'semiconductor' %}💾{% elif category == 'auto' %}🚗{% elif category == 'health' %}🏥{% elif category == 'economy' %}📊{% elif category == 'business' %}💼{% elif category == 'politics' %}🏛️{% elif category == 'investment' %}📈{% elif category == 'consumer_electronics' %}📱{% elif category == 'key_people' %}🎤{% else %}📌{% endif %}
-                </span>
-                <h2 class="section-title">
-                    {% if category == 'ai' %}AI{% elif category == 'robotics' %}机器人{% elif category == 'embodied_ai' %}具身智能{% elif category == 'semiconductor' %}半导体{% elif category == 'auto' %}汽车{% elif category == 'health' %}医疗健康{% elif category == 'economy' %}经济政策{% elif category == 'business' %}商业科技{% elif category == 'politics' %}政治政策{% elif category == 'investment' %}投资财经{% elif category == 'consumer_electronics' %}消费电子{% elif category == 'key_people' %}关键人物{% else %}{{ category }}{% endif %}
-                </h2>
-                <span class="text-sm" style="color: var(--text-tertiary);">{{ articles|length }} 条</span>
-            </div>
-            
-            <div class="space-y-4">
-                {% for article in articles %}
-                <article class="article-card">
-                    <h3 class="text-lg font-semibold mb-2 leading-snug">{{ article.title_original }}</h3>
-                    {% if article.title_zh and article.title_zh != article.title_original %}
-                    <p class="mb-3" style="color: var(--text-secondary);">{{ article.title_zh }}</p>
-                    {% endif %}
-                    
-                    <div class="flex flex-wrap items-center gap-4 text-sm mb-4" style="color: var(--text-tertiary);">
-                        <span class="flex items-center gap-1">📰 {{ article.source }}</span>
-                        <span class="flex items-center gap-1">🕐 {{ article.published_at }}</span>
-                        {% if article.mentioned_people %}
-                        <span class="flex items-center gap-1">👤 {{ article.mentioned_people|join(', ') }}</span>
-                        {% endif %}
-                    </div>
-                    
-                    <div class="rounded-xl p-4 mb-4" style="background: var(--bg-card);">
-                        <h4 class="text-sm font-medium mb-2" style="color: var(--text-secondary);">📋 摘要</h4>
-                        <p class="text-sm leading-relaxed" style="color: var(--text-secondary);">{{ article.summary_zh[:500] }}{% if article.summary_zh|length > 500 %}...{% endif %}</p>
-                    </div>
-                    
-                    {% if article.key_points %}
-                    <div class="mb-4">
-                        <h4 class="text-sm font-medium mb-2" style="color: var(--text-secondary);">🔑 关键要点</h4>
-                        <ul class="space-y-2">
-                            {% for point in article.key_points[:4] %}
-                            <li class="text-sm flex items-start gap-2" style="color: var(--text-secondary);">
-                                <span style="color: var(--accent);">•</span>
-                                <span>{{ point }}</span>
-                            </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                    {% endif %}
-                    
-                    {% if article.impact_analysis %}
-                    <div class="rounded-xl p-4 mb-4" style="background: rgba(234,179,8,0.1); border: 1px solid rgba(234,179,8,0.2);">
-                        <h4 class="text-sm font-medium mb-2" style="color: #facc15;">💡 影响分析</h4>
-                        <p class="text-sm" style="color: rgba(250,204,21,0.8);">{{ article.impact_analysis[:300] }}{% if article.impact_analysis|length > 300 %}...{% endif %}</p>
-                    </div>
-                    {% endif %}
-                    
-                    <a href="{{ article.url }}" target="_blank" rel="noopener" class="inline-flex items-center gap-1 text-sm font-medium transition-colors group" style="color: var(--accent);">
-                        <span>🔗 阅读原文</span>
-                        <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
-                        </svg>
-                    </a>
-                </article>
-                {% endfor %}
-            </div>
-        </section>
-        <div class="divider mb-12"></div>
-        {% endfor %}
-        
-        <!-- Predictions -->
-        {% if briefing.get('predictions') %}
-        <section class="animate-in" style="animation-delay: 0.5s;">
-            <h2 class="section-title text-center mb-8 flex items-center justify-center gap-3">
-                <span class="text-2xl">🎯</span>
-                <span>未来预测</span>
-            </h2>
-            
-            <div class="grid sm:grid-cols-2 gap-4">
-                {% for timeframe, title in [('week', '📆 未来一周'), ('month', '📆 未来一个月'), ('half_year', '📆 未来半年'), ('year', '📆 未来一年')] %}
-                <div class="card p-6" style="background: linear-gradient(135deg, rgba(102,126,234,0.08) 0%, rgba(118,75,162,0.08) 100%);">
-                    <h3 class="font-semibold mb-4">{{ title }}</h3>
-                    <div class="space-y-3">
-                        {% for pred in briefing.predictions if pred.timeframe == timeframe %}
-                        <div class="text-sm">
-                            <span class="font-medium" style="color: var(--accent);">{{ pred.category_name or pred.category }}:</span>
-                            <span class="ml-1" style="color: var(--text-secondary);">{{ pred.content[:120] }}{% if pred.content|length > 120 %}...{% endif %}</span>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </section>
-        {% endif %}
-        
-        {% elif briefing.get('markdown') %}
-        <section class="card p-8 animate-in">
-            <div class="prose prose-invert max-w-none" id="markdown-content">{{ briefing.markdown | safe }}</div>
-        </section>
-        
-        {% else %}
-        <section class="text-center py-20 animate-in">
-            <div class="w-24 h-24 rounded-3xl flex items-center justify-center mx-auto mb-6" style="background: var(--bg-card);">
-                <span class="text-5xl">📭</span>
-            </div>
-            <p class="text-lg mb-2" style="color: var(--text-secondary);">该日期暂无简报数据</p>
-            <a href="/" class="text-sm transition-colors" style="color: var(--accent);">← 返回首页</a>
-        </section>
-        {% endif %}
-        
+
+  <!-- 阅读进度条 -->
+  <div class="toc-progress">
+    <div class="toc-progress-bar" id="toc-progress-bar"></div>
+  </div>
+
+  <!-- 左侧目录侧边栏 -->
+  {% if briefing.get('articles_by_category') %}
+  <aside class="toc-sidebar" id="toc-sidebar" aria-label="文章目录">
+    <div class="toc-header">📑 文章目录</div>
+
+    {% for category, articles in briefing.articles_by_category.items() if articles %}
+    {% set cat_emoji = {
+      'ai': '🤖', 'robotics': '🦾', 'embodied_ai': '👓',
+      'semiconductor': '💾', 'auto': '🚗', 'health': '🏥',
+      'economy': '📊', 'business': '💼', 'politics': '🏛️',
+      'investment': '📈', 'consumer_electronics': '📱', 'key_people': '🎤'
+    }.get(category, '📌') %}
+    {% set cat_name = {
+      'ai': 'AI', 'robotics': '机器人', 'embodied_ai': '具身智能',
+      'semiconductor': '半导体', 'auto': '汽车', 'health': '医疗健康',
+      'economy': '经济政策', 'business': '商业科技', 'politics': '政治政策',
+      'investment': '投资财经', 'consumer_electronics': '消费电子', 'key_people': '关键人物'
+    }.get(category, category) %}
+
+    <div class="toc-category" data-category="{{ category }}" onclick="toggleTocCategory(this)">
+      <div class="toc-category-left">
+        <span class="toc-category-emoji">{{ cat_emoji }}</span>
+        <span class="toc-category-name">{{ cat_name }}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
+        <span class="toc-category-count">{{ articles|length }}</span>
+        <svg class="toc-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+      </div>
     </div>
+
+    <div class="toc-articles" id="toc-articles-{{ category }}">
+      {% for article in articles %}
+      <a class="toc-article"
+         data-article-id="article-{{ article.id }}"
+         href="#article-{{ article.id }}"
+         onclick="scrollToArticle('article-{{ article.id }}', event)">
+        {{ (article.title_zh or article.title_original)[:42] }}{% if (article.title_zh or article.title_original)|length > 42 %}…{% endif %}
+      </a>
+      {% endfor %}
+    </div>
+    {% endfor %}
+
+    <!-- 预测章节 -->
+    {% if briefing.get('predictions') %}
+    <div style="margin-top:8px; padding: 0 16px 0 16px;">
+      <div style="height:1px;background:rgba(255,255,255,0.06);margin-bottom:8px;"></div>
+    </div>
+    <div class="toc-category" onclick="scrollToSection('predictions-section')">
+      <div class="toc-category-left">
+        <span class="toc-category-emoji">🎯</span>
+        <span class="toc-category-name">未来预测</span>
+      </div>
+    </div>
+    {% endif %}
+  </aside>
+
+  <!-- 移动端遮罩 -->
+  <div class="toc-overlay" id="toc-overlay" onclick="closeMobileToc()"></div>
+
+  <!-- 移动端浮动按钮 -->
+  <button class="toc-mobile-btn" onclick="openMobileToc()" aria-label="打开目录">
+    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h10"/>
+    </svg>
+  </button>
+  {% endif %}
+
+  <!-- Fixed Navigation -->
+  <nav class="nav-blur fixed top-0 z-50 safe-top with-toc-nav" style="right:0;">
+    <div class="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-2 text-sm font-medium hover:opacity-80 transition-opacity" style="color: var(--text-secondary);">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+        </svg>
+        <span>返回</span>
+      </a>
+      <span class="text-sm font-medium" style="color: var(--text-tertiary);">{{ date[:4] }}.{{ date[4:6] }}.{{ date[6:] }}</span>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="with-toc-main">
+    <div class="max-w-4xl mx-auto px-6 pt-24 pb-20">
+
+      <!-- Header -->
+      <header class="text-center mb-16 animate-in">
+        <div class="mb-4"><span class="text-5xl">📰</span></div>
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-4">
+          <span class="gradient-text">每日科技简报</span>
+        </h1>
+        <p class="text-2xl sm:text-3xl font-semibold gradient-text-color mb-3">
+          {{ date[:4] }}年{{ date[4:6] }}月{{ date[6:] }}日
+        </p>
+        <p class="text-sm" style="color: var(--text-tertiary);">
+          更新于 {{ briefing.get('generated_at', '06:00') }} CST
+        </p>
+      </header>
+
+      {% if briefing.get('articles_by_category') or briefing.get('articles') %}
+
+      <!-- Stats Grid -->
+      <section class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-16 animate-in" style="animation-delay: 0.1s;">
+        <div class="card p-6 text-center">
+          <p class="stat-number gradient-text-color">{{ briefing.total_articles or 0 }}</p>
+          <p class="text-sm mt-2" style="color: var(--text-tertiary);">新闻总数</p>
+        </div>
+        <div class="card p-6 text-center">
+          <p class="stat-number gradient-text-color">{{ briefing.categories_count or 12 }}</p>
+          <p class="text-sm mt-2" style="color: var(--text-tertiary);">覆盖类别</p>
+        </div>
+        <div class="card p-6 text-center">
+          <p class="stat-number gradient-text-color">{{ briefing.sources_count or '20+' }}</p>
+          <p class="text-sm mt-2" style="color: var(--text-tertiary);">新闻来源</p>
+        </div>
+        <div class="card p-6 text-center">
+          <p class="stat-number gradient-text-color">{{ briefing.predictions|length if briefing.predictions else 4 }}</p>
+          <p class="text-sm mt-2" style="color: var(--text-tertiary);">预测维度</p>
+        </div>
+      </section>
+
+      <!-- Summary -->
+      {% if briefing.get('summary') %}
+      <section class="card p-8 mb-12 animate-in" style="animation-delay: 0.15s;">
+        <h2 class="text-xl font-semibold mb-4 flex items-center gap-2">
+          <span>📝</span> 今日要点
+        </h2>
+        <p class="leading-relaxed" style="color: var(--text-secondary);">{{ briefing.summary }}</p>
+      </section>
+      {% endif %}
+
+      <!-- Category Navigation (horizontal pills, kept for mobile) -->
+      <nav class="category-nav hide-scrollbar mb-8 animate-in lg:hidden" style="animation-delay: 0.2s;">
+        {% for category, articles in briefing.articles_by_category.items() if articles %}
+        <a href="#{{ category }}" class="category-pill">
+          {% if category == 'ai' %}🤖 AI{% elif category == 'robotics' %}🦾 机器人{% elif category == 'embodied_ai' %}👓 具身智能{% elif category == 'semiconductor' %}💾 半导体{% elif category == 'auto' %}🚗 汽车{% elif category == 'health' %}🏥 医疗{% elif category == 'economy' %}📊 经济{% elif category == 'business' %}💼 商业{% elif category == 'politics' %}🏛️ 政治{% elif category == 'investment' %}📈 投资{% elif category == 'consumer_electronics' %}📱 消费电子{% elif category == 'key_people' %}🎤 人物{% else %}📌 {{ category }}{% endif %}
+          <span class="ml-1 opacity-50">{{ articles|length }}</span>
+        </a>
+        {% endfor %}
+      </nav>
+
+      <!-- Articles by Category -->
+      {% for category, articles in briefing.articles_by_category.items() if articles %}
+      <section id="{{ category }}" class="mb-12 animate-in" style="animation-delay: {{ 0.25 + loop.index * 0.05 }}s;">
+        <div class="flex items-center gap-3 mb-6">
+          <span class="text-2xl">
+            {% if category == 'ai' %}🤖{% elif category == 'robotics' %}🦾{% elif category == 'embodied_ai' %}👓{% elif category == 'semiconductor' %}💾{% elif category == 'auto' %}🚗{% elif category == 'health' %}🏥{% elif category == 'economy' %}📊{% elif category == 'business' %}💼{% elif category == 'politics' %}🏛️{% elif category == 'investment' %}📈{% elif category == 'consumer_electronics' %}📱{% elif category == 'key_people' %}🎤{% else %}📌{% endif %}
+          </span>
+          <h2 class="section-title">
+            {% if category == 'ai' %}AI{% elif category == 'robotics' %}机器人{% elif category == 'embodied_ai' %}具身智能{% elif category == 'semiconductor' %}半导体{% elif category == 'auto' %}汽车{% elif category == 'health' %}医疗健康{% elif category == 'economy' %}经济政策{% elif category == 'business' %}商业科技{% elif category == 'politics' %}政治政策{% elif category == 'investment' %}投资财经{% elif category == 'consumer_electronics' %}消费电子{% elif category == 'key_people' %}关键人物{% else %}{{ category }}{% endif %}
+          </h2>
+          <span class="text-sm" style="color: var(--text-tertiary);">{{ articles|length }} 条</span>
+        </div>
+
+        <div class="space-y-4">
+          {% for article in articles %}
+          <article class="article-card" id="article-{{ article.id }}">
+            <h3 class="text-lg font-semibold mb-2 leading-snug">{{ article.title_original }}</h3>
+            {% if article.title_zh and article.title_zh != article.title_original %}
+            <p class="mb-3" style="color: var(--text-secondary);">{{ article.title_zh }}</p>
+            {% endif %}
+
+            <div class="flex flex-wrap items-center gap-4 text-sm mb-4" style="color: var(--text-tertiary);">
+              <span class="flex items-center gap-1">📰 {{ article.source }}</span>
+              <span class="flex items-center gap-1">🕐 {{ article.published_at }}</span>
+              {% if article.mentioned_people %}
+              <span class="flex items-center gap-1">👤 {{ article.mentioned_people|join(', ') }}</span>
+              {% endif %}
+            </div>
+
+            <div class="rounded-xl p-4 mb-4" style="background: var(--bg-card);">
+              <h4 class="text-sm font-medium mb-2" style="color: var(--text-secondary);">📋 摘要</h4>
+              <p class="text-sm leading-relaxed" style="color: var(--text-secondary);">{{ article.summary_zh[:500] }}{% if article.summary_zh|length > 500 %}...{% endif %}</p>
+            </div>
+
+            {% if article.key_points %}
+            <div class="mb-4">
+              <h4 class="text-sm font-medium mb-2" style="color: var(--text-secondary);">🔑 关键要点</h4>
+              <ul class="space-y-2">
+                {% for point in article.key_points[:4] %}
+                <li class="text-sm flex items-start gap-2" style="color: var(--text-secondary);">
+                  <span style="color: var(--accent);">•</span>
+                  <span>{{ point }}</span>
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
+            {% endif %}
+
+            {% if article.impact_analysis %}
+            <div class="rounded-xl p-4 mb-4" style="background: rgba(234,179,8,0.1); border: 1px solid rgba(234,179,8,0.2);">
+              <h4 class="text-sm font-medium mb-2" style="color: #facc15;">💡 影响分析</h4>
+              <p class="text-sm" style="color: rgba(250,204,21,0.8);">{{ article.impact_analysis[:300] }}{% if article.impact_analysis|length > 300 %}...{% endif %}</p>
+            </div>
+            {% endif %}
+
+            <a href="{{ article.url }}" target="_blank" rel="noopener" class="inline-flex items-center gap-1 text-sm font-medium transition-colors group" style="color: var(--accent);">
+              <span>🔗 阅读原文</span>
+              <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+              </svg>
+            </a>
+          </article>
+          {% endfor %}
+        </div>
+      </section>
+      <div class="divider mb-12"></div>
+      {% endfor %}
+
+      <!-- Predictions -->
+      {% if briefing.get('predictions') %}
+      <section class="animate-in" id="predictions-section" style="animation-delay: 0.5s;">
+        <h2 class="section-title text-center mb-8 flex items-center justify-center gap-3">
+          <span class="text-2xl">🎯</span>
+          <span>未来预测</span>
+        </h2>
+        <div class="grid sm:grid-cols-2 gap-4">
+          {% for timeframe, title in [('week', '📆 未来一周'), ('month', '📆 未来一个月'), ('half_year', '📆 未来半年'), ('year', '📆 未来一年')] %}
+          <div class="card p-6" style="background: linear-gradient(135deg, rgba(102,126,234,0.08) 0%, rgba(118,75,162,0.08) 100%);">
+            <h3 class="font-semibold mb-4">{{ title }}</h3>
+            <div class="space-y-3">
+              {% for pred in briefing.predictions if pred.timeframe == timeframe %}
+              <div class="text-sm">
+                <span class="font-medium" style="color: var(--accent);">{{ pred.category_name or pred.category }}:</span>
+                <span class="ml-1" style="color: var(--text-secondary);">{{ pred.content[:120] }}{% if pred.content|length > 120 %}...{% endif %}</span>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </section>
+      {% endif %}
+
+      {% elif briefing.get('markdown') %}
+      <section class="card p-8 animate-in">
+        <div class="prose prose-invert max-w-none" id="markdown-content">{{ briefing.markdown | safe }}</div>
+      </section>
+
+      {% else %}
+      <section class="text-center py-20 animate-in">
+        <div class="w-24 h-24 rounded-3xl flex items-center justify-center mx-auto mb-6" style="background: var(--bg-card);">
+          <span class="text-5xl">📭</span>
+        </div>
+        <p class="text-lg mb-2" style="color: var(--text-secondary);">该日期暂无简报数据</p>
+        <a href="/" class="text-sm transition-colors" style="color: var(--accent);">← 返回首页</a>
+      </section>
+      {% endif %}
+
+    </div>
+  </div>
 </div>
 {% endblock %}
 
 {% block extra_scripts %}
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script>
+// ── Markdown 渲染 ──
 const mdContent = document.getElementById('markdown-content');
 if (mdContent && mdContent.textContent.trim().startsWith('#')) {
-    mdContent.innerHTML = marked.parse(mdContent.textContent);
+  mdContent.innerHTML = marked.parse(mdContent.textContent);
 }
 
-// Smooth scroll for category navigation
+// ── 水平 pill 平滑滚动（移动端保留） ──
 document.querySelectorAll('.category-pill').forEach(pill => {
-    pill.addEventListener('click', (e) => {
-        e.preventDefault();
-        const target = document.querySelector(pill.getAttribute('href'));
-        if (target) {
-            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-    });
+  pill.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(pill.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
 });
+
+// ── TOC：展开/收起分类 ──
+function toggleTocCategory(el) {
+  const category = el.dataset.category;
+  const list = document.getElementById('toc-articles-' + category);
+  if (!list) return;
+  const isOpen = list.classList.contains('open');
+  list.classList.toggle('open', !isOpen);
+  el.classList.toggle('open', !isOpen);
+}
+
+// 默认展开所有有文章的分类
+document.querySelectorAll('.toc-category[data-category]').forEach(el => {
+  const category = el.dataset.category;
+  const list = document.getElementById('toc-articles-' + category);
+  if (list) {
+    list.classList.add('open');
+    el.classList.add('open');
+  }
+});
+
+// ── TOC：点击文章跳转 ──
+function scrollToArticle(id, e) {
+  if (e) e.preventDefault();
+  const el = document.getElementById(id);
+  if (!el) return;
+  const offset = 80;
+  const top = el.getBoundingClientRect().top + window.scrollY - offset;
+  window.scrollTo({ top, behavior: 'smooth' });
+  // 高亮动画
+  el.classList.remove('highlight');
+  void el.offsetWidth;
+  el.classList.add('highlight');
+  setTimeout(() => el.classList.remove('highlight'), 1200);
+  // 移动端关闭侧边栏
+  closeMobileToc();
+}
+
+function scrollToSection(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const top = el.getBoundingClientRect().top + window.scrollY - 80;
+  window.scrollTo({ top, behavior: 'smooth' });
+  closeMobileToc();
+}
+
+// ── 移动端 TOC 开关 ──
+function openMobileToc() {
+  document.getElementById('toc-sidebar').classList.add('mobile-open');
+  document.getElementById('toc-overlay').style.display = 'block';
+  document.body.style.overflow = 'hidden';
+}
+function closeMobileToc() {
+  document.getElementById('toc-sidebar')?.classList.remove('mobile-open');
+  const overlay = document.getElementById('toc-overlay');
+  if (overlay) overlay.style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+// ── 阅读进度条 ──
+const progressBar = document.getElementById('toc-progress-bar');
+function updateProgress() {
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+  if (progressBar) progressBar.style.width = progress + '%';
+}
+
+// ── Intersection Observer：高亮当前阅读文章 ──
+const articleEls = document.querySelectorAll('article.article-card[id]');
+const tocArticleLinks = document.querySelectorAll('.toc-article');
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      tocArticleLinks.forEach(link => {
+        const isActive = link.dataset.articleId === id;
+        link.classList.toggle('reading', isActive);
+        // 将目录滚动到对应条目
+        if (isActive) {
+          link.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+          // 高亮对应的分类
+          const categorySection = link.closest('.toc-articles');
+          if (categorySection) {
+            const catEl = categorySection.previousElementSibling;
+            document.querySelectorAll('.toc-category').forEach(c => c.classList.remove('active'));
+            if (catEl) catEl.classList.add('active');
+          }
+        }
+      });
+    }
+  });
+}, {
+  rootMargin: '-80px 0px -60% 0px',
+  threshold: 0
+});
+
+articleEls.forEach(el => observer.observe(el));
+
+window.addEventListener('scroll', updateProgress, { passive: true });
+updateProgress();
 </script>
 {% endblock %}
