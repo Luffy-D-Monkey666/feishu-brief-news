@@ -71,7 +71,8 @@ def index():
     """首页"""
     dates = get_available_dates()
     latest_date = dates[0] if dates else None
-    return render_template('index.html', dates=dates, latest_date=latest_date)
+    latest_briefing = load_briefing(latest_date) if latest_date else None
+    return render_template('index.html', dates=dates, latest_date=latest_date, latest_briefing=latest_briefing)
 
 
 @app.route('/briefing/<date_str>')
