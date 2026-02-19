@@ -229,7 +229,7 @@
 
   <!-- 左侧目录侧边栏 -->
   {% if briefing.get('articles_by_category') %}
-  <aside class="toc-sidebar" id="toc-sidebar" aria-label="文章目录">
+  <aside class="toc-sidebar" id="toc-sidebar" aria-label="文章目录" style="position:fixed;top:0;left:0;width:260px;height:100vh;z-index:40;overflow-y:auto;padding:72px 0 24px 0;border-right:1px solid rgba(255,255,255,0.08);background:rgba(10,10,15,0.95);">
     <div class="toc-header">📑 文章目录</div>
 
     {% for category, articles in briefing.articles_by_category.items() if articles %}
@@ -263,8 +263,8 @@
       {% for article in articles %}
       <a class="toc-article"
          data-article-id="article-{{ article.id }}"
-         href="#article-{{ article.id }}"
-         onclick="scrollToArticle('article-{{ article.id }}', event)">
+         href="javascript:void(0)"
+         onclick="scrollToArticle('article-{{ article.id }}', event); return false;">
         {{ (article.title_zh or article.title_original)[:42] }}{% if (article.title_zh or article.title_original)|length > 42 %}…{% endif %}
       </a>
       {% endfor %}
@@ -522,12 +522,17 @@ document.querySelectorAll('.toc-category[data-category]').forEach(el => {
 
 // ── TOC：点击文章跳转 ──
 function scrollToArticle(id, e) {
-  if (e) e.preventDefault();
+  if (e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
   const el = document.getElementById(id);
   if (!el) return;
   const offset = 80;
   const top = el.getBoundingClientRect().top + window.scrollY - offset;
   window.scrollTo({ top, behavior: 'smooth' });
+  // 更新 URL hash 但不触发跳转
+  history.pushState(null, '', '#' + id);
   // 高亮动画
   el.classList.remove('highlight');
   void el.offsetWidth;
@@ -535,6 +540,7 @@ function scrollToArticle(id, e) {
   setTimeout(() => el.classList.remove('highlight'), 1200);
   // 移动端关闭侧边栏
   closeMobileToc();
+  return false;
 }
 
 function scrollToSection(id) {
