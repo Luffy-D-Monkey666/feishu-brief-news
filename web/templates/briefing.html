@@ -398,18 +398,18 @@
               {% endif %}
             </div>
 
-            <div class="rounded-xl p-4 mb-4" style="background: var(--bg-card);">
-              <h4 class="text-sm font-medium mb-2" style="color: var(--text-secondary);">📋 摘要</h4>
+            <div class="rounded-xl p-4 mb-4" style="background: var(--bg-elevated); border: 1px solid var(--border);">
+              <h4 class="text-sm font-medium mb-2" style="color: var(--accent);">📋 摘要</h4>
               <p class="text-sm leading-relaxed" style="color: var(--text-secondary);">{{ article.summary_zh[:500] }}{% if article.summary_zh|length > 500 %}...{% endif %}</p>
             </div>
 
             {% if article.key_points %}
-            <div class="mb-4">
-              <h4 class="text-sm font-medium mb-2" style="color: var(--text-secondary);">🔑 关键要点</h4>
+            <div class="mb-4 rounded-xl p-4" style="background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.15);">
+              <h4 class="text-sm font-medium mb-3" style="color: #60a5fa;">🔑 关键要点</h4>
               <ul class="space-y-2">
                 {% for point in article.key_points[:4] %}
                 <li class="text-sm flex items-start gap-2" style="color: var(--text-secondary);">
-                  <span style="color: var(--accent);">•</span>
+                  <span style="color: #60a5fa; font-size: 8px; margin-top: 6px;">●</span>
                   <span>{{ point }}</span>
                 </li>
                 {% endfor %}
@@ -424,7 +424,7 @@
             </div>
             {% endif %}
 
-            <a href="{{ article.url }}" target="_blank" rel="noopener" class="inline-flex items-center gap-1 text-sm font-medium transition-colors group" style="color: var(--accent);">
+            <a href="{{ article.url }}" target="_blank" rel="noopener" class="inline-flex items-center gap-2 text-sm font-medium transition-all group px-4 py-2 rounded-lg hover:bg-blue-500/20" style="color: #60a5fa; background: rgba(59,130,246,0.1);">
               <span>🔗 阅读原文</span>
               <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>

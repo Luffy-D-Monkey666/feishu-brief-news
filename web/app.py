@@ -81,7 +81,8 @@ def briefing_page(date_str: str):
     briefing = load_briefing(date_str)
     if briefing is None:
         return render_template('404.html'), 404
-    return render_template('briefing.html', briefing=briefing, date=date_str)
+    dates = get_available_dates()
+    return render_template('briefing.html', briefing=briefing, date=date_str, dates=dates)
 
 
 @app.route('/api/dates')
