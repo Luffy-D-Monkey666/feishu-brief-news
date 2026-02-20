@@ -234,12 +234,6 @@ us:
       lang: en
 
   community:
-    - name: Hacker News
-      url: https://news.ycombinator.com
-      rss: https://hnrss.org/frontpage
-      type: rss
-      lang: en
-      
     - name: Reddit Technology
       url: https://www.reddit.com/r/technology/
       rss: https://www.reddit.com/r/technology/.rss
