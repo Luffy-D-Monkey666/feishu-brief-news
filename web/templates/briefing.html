@@ -423,22 +423,15 @@
 
             <div class="rounded-xl p-4 mb-4" style="background: var(--bg-elevated); border: 1px solid var(--border);">
               <h4 class="text-sm font-medium mb-3" style="color: var(--accent);">📋 摘要</h4>
-              <div class="text-sm leading-relaxed space-y-2" style="color: var(--text-secondary);">
-                {% set paragraphs = article.summary_zh.split('\n\n') if article.summary_zh else [] %}
-                {% if paragraphs|length > 1 %}
-                  {% for para in paragraphs[:4] if para.strip() %}
-                  <p>{{ para.strip()[:300] }}{% if para.strip()|length > 300 %}...{% endif %}</p>
-                  {% endfor %}
-                {% else %}
-                  {% set sentences = article.summary_zh.replace('。', '。\n').split('\n') if article.summary_zh else [] %}
-                  {% for sent in sentences[:6] if sent.strip() %}
-                  <p class="flex items-start gap-2">
-                    <span style="color: var(--accent); margin-top: 6px; font-size: 6px;">●</span>
-                    <span>{{ sent.strip() }}</span>
-                  </p>
-                  {% endfor %}
-                {% endif %}
-              </div>
+              <ul class="text-sm leading-relaxed space-y-2" style="color: var(--text-secondary);">
+                {% set summary_lines = article.summary_zh.replace('。\n', '。||').replace('。', '。||').replace('\n\n', '||').split('||') if article.summary_zh else [] %}
+                {% for line in summary_lines[:5] if line.strip() and line.strip()|length > 10 %}
+                <li class="flex items-start gap-2">
+                  <span style="color: var(--accent); margin-top: 7px; font-size: 5px;">●</span>
+                  <span>{{ line.strip() }}</span>
+                </li>
+                {% endfor %}
+              </ul>
             </div>
 
             {% if article.key_points %}
@@ -447,7 +440,7 @@
               <ul class="space-y-2">
                 {% for point in article.key_points[:4] %}
                 <li class="text-sm flex items-start gap-2" style="color: var(--text-secondary);">
-                  <span style="color: #60a5fa; font-size: 8px; margin-top: 6px;">●</span>
+                  <span style="color: #60a5fa; font-size: 5px; margin-top: 7px;">●</span>
                   <span>{{ point }}</span>
                 </li>
                 {% endfor %}
@@ -457,8 +450,16 @@
 
             {% if article.impact_analysis %}
             <div class="rounded-xl p-4 mb-4" style="background: rgba(234,179,8,0.1); border: 1px solid rgba(234,179,8,0.2);">
-              <h4 class="text-sm font-medium mb-2" style="color: #facc15;">💡 影响分析</h4>
-              <p class="text-sm" style="color: rgba(250,204,21,0.8);">{{ article.impact_analysis[:300] }}{% if article.impact_analysis|length > 300 %}...{% endif %}</p>
+              <h4 class="text-sm font-medium mb-3" style="color: #facc15;">💡 影响分析</h4>
+              <ul class="text-sm space-y-2" style="color: rgba(250,204,21,0.85);">
+                {% set impact_lines = article.impact_analysis.replace('。\n', '。||').replace('；', '；||').replace('。', '。||').split('||') if article.impact_analysis else [] %}
+                {% for line in impact_lines[:4] if line.strip() and line.strip()|length > 10 %}
+                <li class="flex items-start gap-2">
+                  <span style="color: #facc15; margin-top: 7px; font-size: 5px;">●</span>
+                  <span>{{ line.strip() }}</span>
+                </li>
+                {% endfor %}
+              </ul>
             </div>
             {% endif %}
 
