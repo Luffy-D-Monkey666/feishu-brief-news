@@ -4,7 +4,7 @@ services:
     name: daily-briefing
     runtime: python
     buildCommand: pip install -r web/requirements.txt
-    startCommand: cd web && gunicorn app:app --bind 0.0.0.0:$PORT --timeout 120 --preload
+    startCommand: cd web && gunicorn app:app --bind 0.0.0.0:$PORT --timeout 120 --workers 1
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.0

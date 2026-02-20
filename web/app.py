@@ -10,6 +10,11 @@ from datetime import datetime, timedelta
 from pathlib import Path
 import json
 import os
+import sys
+
+# 启动时立即输出，确保 Render 检测到进程活跃
+print(f"[{datetime.now().isoformat()}] Flask app initializing...", flush=True)
+sys.stdout.flush()
 
 app = Flask(__name__, static_folder='static', template_folder='templates')
 CORS(app)
@@ -17,6 +22,9 @@ CORS(app)
 # 数据目录
 DATA_DIR = Path(__file__).parent.parent / 'data'
 OUTPUT_DIR = Path(__file__).parent.parent / 'output'
+
+print(f"[{datetime.now().isoformat()}] DATA_DIR: {DATA_DIR}", flush=True)
+print(f"[{datetime.now().isoformat()}] OUTPUT_DIR: {OUTPUT_DIR}", flush=True)
 
 
 def load_briefing(date_str: str = None) -> dict:
@@ -109,10 +117,10 @@ def api_latest():
     return jsonify(load_briefing(dates[0]))
 
 
-# 健康检查
+# 健康检查 - 尽可能轻量
 @app.route('/health')
 def health():
-    return jsonify({'status': 'ok', 'time': datetime.now().isoformat()})
+    return 'ok', 200, {'Content-Type': 'text/plain'}
 
 
 if __name__ == '__main__':
