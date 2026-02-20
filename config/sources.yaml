@@ -52,11 +52,6 @@ china:
       type: rss
       lang: zh
       
-    - name: 新智元
-      url: https://www.xinzhiyuan.com
-      type: web
-      lang: zh
-      
     - name: 智东西
       url: https://zhidx.com
       type: web
@@ -80,18 +75,8 @@ china:
       lang: zh
 
   auto:
-    - name: 汽车之家
-      url: https://www.autohome.com.cn
-      type: web
-      lang: zh
-      
     - name: 42号车库
       url: https://www.42how.com
-      type: web
-      lang: zh
-      
-    - name: 电动邦
-      url: https://www.diandong.com
       type: web
       lang: zh
 
@@ -119,23 +104,6 @@ china:
       
     - name: 健康界
       url: https://www.cn-healthcare.com
-      type: web
-      lang: zh
-
-  portals:
-    - name: 新浪科技
-      url: https://tech.sina.com.cn
-      rss: https://feed.sina.com.cn/tech/rollnews.xml
-      type: rss
-      lang: zh
-      
-    - name: 网易科技
-      url: https://tech.163.com
-      type: web
-      lang: zh
-      
-    - name: 腾讯科技
-      url: https://tech.qq.com
       type: web
       lang: zh
 
@@ -188,11 +156,6 @@ us:
       url: https://www.technologyreview.com
       rss: https://www.technologyreview.com/feed/
       type: rss
-      lang: en
-      
-    - name: The AI Report
-      url: https://theaireport.com
-      type: web
       lang: en
 
   finance_business:
