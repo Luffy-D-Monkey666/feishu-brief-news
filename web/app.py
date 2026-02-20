@@ -125,4 +125,6 @@ def health():
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port, debug=True)
+    debug = os.environ.get('FLASK_DEBUG', 'false').lower() == 'true'
+    print(f"[{datetime.now().isoformat()}] Starting Flask on port {port}, debug={debug}", flush=True)
+    app.run(host='0.0.0.0', port=port, debug=debug, threaded=True)
