@@ -94,12 +94,14 @@
   }
   .toc-articles.open { max-height: 2000px; }
 
-  /* 文章条目 */
+  /* 文章条目 - 两行布局：标题 + 摘要 */
   .toc-article {
-    display: block;
-    padding: 5px 16px 5px 38px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 8px 16px 8px 38px;
     font-size: 11.5px;
-    line-height: 1.45;
+    line-height: 1.4;
     color: var(--text-tertiary, rgba(255,255,255,0.35));
     cursor: pointer;
     transition: background 0.12s, color 0.12s, border-color 0.12s;
@@ -112,25 +114,70 @@
     content: '';
     position: absolute;
     left: 28px;
-    top: 50%;
+    top: 14px;
     width: 5px;
     height: 5px;
     border-radius: 50%;
     background: rgba(255,255,255,0.15);
-    transform: translateY(-50%);
     transition: background 0.15s;
   }
+  .toc-article-title {
+    font-weight: 500;
+    color: var(--text-secondary, rgba(255,255,255,0.65));
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .toc-article-summary {
+    font-size: 10px;
+    color: var(--text-tertiary, rgba(255,255,255,0.35));
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    opacity: 0.8;
+  }
   .toc-article:hover {
-    color: rgba(255,255,255,0.75);
     background: rgba(255,255,255,0.04);
+  }
+  .toc-article:hover .toc-article-title {
+    color: rgba(255,255,255,0.9);
+  }
+  .toc-article:hover .toc-article-summary {
+    color: rgba(255,255,255,0.5);
   }
   .toc-article:hover::before { background: rgba(255,255,255,0.4); }
   .toc-article.reading {
-    color: var(--accent, #a78bfa);
     border-left-color: var(--accent, #a78bfa);
     background: rgba(167,139,250,0.07);
   }
+  .toc-article.reading .toc-article-title {
+    color: var(--accent, #a78bfa);
+  }
+  .toc-article.reading .toc-article-summary {
+    color: rgba(167,139,250,0.7);
+  }
   .toc-article.reading::before { background: var(--accent, #a78bfa); }
+  
+  /* 分类预测条目 */
+  .toc-category-prediction {
+    padding: 6px 16px 6px 38px;
+    font-size: 10px;
+    line-height: 1.4;
+    color: rgba(250,204,21,0.7);
+    background: rgba(250,204,21,0.05);
+    border-left: 2px solid transparent;
+    margin: 4px 0;
+  }
+  .toc-category-prediction-label {
+    font-weight: 500;
+    color: rgba(250,204,21,0.85);
+    margin-bottom: 2px;
+  }
+  .toc-category-prediction-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 
   /* 进度条 */
   .toc-progress {
@@ -265,9 +312,21 @@
          data-article-id="article-{{ article.id }}"
          href="javascript:void(0)"
          onclick="scrollToArticle('article-{{ article.id }}', event); return false;">
-        {{ (article.title_zh or article.title_original)[:42] }}{% if (article.title_zh or article.title_original)|length > 42 %}…{% endif %}
+        <span class="toc-article-title">{{ (article.title_zh or article.title_original)[:38] }}{% if (article.title_zh or article.title_original)|length > 38 %}…{% endif %}</span>
+        <span class="toc-article-summary">{{ article.summary_zh[:50] if article.summary_zh else '' }}{% if article.summary_zh and article.summary_zh|length > 50 %}…{% endif %}</span>
       </a>
       {% endfor %}
+      {% if briefing.get('predictions') %}
+      {% set category_predictions = briefing.predictions | selectattr('category', 'equalto', category) | list %}
+      {% if category_predictions %}
+      <div class="toc-category-prediction">
+        <div class="toc-category-prediction-label">🎯 预测</div>
+        {% for pred in category_predictions[:2] %}
+        <div class="toc-category-prediction-text">{{ pred.timeframe_name if pred.timeframe_name else {'week':'一周','month':'一个月','half_year':'半年','year':'一年'}.get(pred.timeframe, pred.timeframe) }}: {{ pred.content[:35] }}{% if pred.content|length > 35 %}…{% endif %}</div>
+        {% endfor %}
+      </div>
+      {% endif %}
+      {% endif %}
     </div>
     {% endfor %}
 
@@ -433,6 +492,28 @@
           </article>
           {% endfor %}
         </div>
+
+        <!-- 分类预测 -->
+        {% if briefing.get('predictions') %}
+        {% set cat_predictions = briefing.predictions | selectattr('category', 'equalto', category) | list %}
+        {% if cat_predictions %}
+        <div class="mt-6 rounded-xl p-5" style="background: linear-gradient(135deg, rgba(250,204,21,0.08) 0%, rgba(251,191,36,0.05) 100%); border: 1px solid rgba(250,204,21,0.15);">
+          <h4 class="text-sm font-semibold mb-4 flex items-center gap-2" style="color: #facc15;">
+            <span>🎯</span> 该领域预测
+          </h4>
+          <div class="grid sm:grid-cols-2 gap-3">
+            {% for pred in cat_predictions %}
+            <div class="rounded-lg p-3" style="background: rgba(0,0,0,0.2);">
+              <div class="text-xs font-medium mb-2" style="color: rgba(250,204,21,0.85);">
+                📆 {{ {'week':'未来一周','month':'未来一个月','half_year':'未来半年','year':'未来一年'}.get(pred.timeframe, pred.timeframe) }}
+              </div>
+              <p class="text-sm leading-relaxed" style="color: var(--text-secondary);">{{ pred.content[:200] }}{% if pred.content|length > 200 %}...{% endif %}</p>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+        {% endif %}
       </section>
       <div class="divider mb-12"></div>
       {% endfor %}
