@@ -24,6 +24,104 @@ from models import (
 )
 
 
+class ClassificationCache:
+    """分类缓存：基于标题关键词相似度复用分类结果"""
+    
+    def __init__(self, cache_path: str = "data/classification_cache.json", max_size: int = 1000):
+        self.cache_path = Path(cache_path)
+        self.cache_path.parent.mkdir(parents=True, exist_ok=True)
+        self.max_size = max_size
+        self.cache = self._load_cache()
+    
+    def _load_cache(self) -> dict:
+        """加载缓存"""
+        if self.cache_path.exists():
+            try:
+                with open(self.cache_path) as f:
+                    data = json.load(f)
+                    # 只保留最近的条目
+                    if len(data) > self.max_size:
+                        sorted_items = sorted(data.items(), key=lambda x: x[1].get('used_at', ''), reverse=True)
+                        data = dict(sorted_items[:self.max_size])
+                    return data
+            except:
+                return {}
+        return {}
+    
+    def _save_cache(self):
+        """保存缓存"""
+        try:
+            with open(self.cache_path, 'w', encoding='utf-8') as f:
+                json.dump(self.cache, f, ensure_ascii=False, indent=2)
+        except Exception as e:
+            logger.warning(f"Failed to save classification cache: {e}")
+    
+    def _extract_keywords(self, title: str) -> set:
+        """提取标题关键词"""
+        import re
+        # 移除标点和常见词
+        stop_words = {'the', 'a', 'an', 'is', 'are', 'was', 'were', 'in', 'on', 'at', 'to', 'for', 
+                      'of', 'and', 'or', 'with', 'as', 'by', 'from', 'its', 'it', 'this', 'that',
+                      '的', '是', '在', '和', '了', '与', '将', '为', '被', '对', '等', '个'}
+        # 提取词汇（英文按空格分，中文按字符）
+        words = re.findall(r'[a-zA-Z]+|[\u4e00-\u9fff]+', title.lower())
+        keywords = {w for w in words if len(w) > 1 and w not in stop_words}
+        return keywords
+    
+    def _calc_similarity(self, kw1: set, kw2: set) -> float:
+        """计算关键词相似度（Jaccard）"""
+        if not kw1 or not kw2:
+            return 0.0
+        intersection = len(kw1 & kw2)
+        union = len(kw1 | kw2)
+        return intersection / union if union > 0 else 0.0
+    
+    def get_cached_category(self, title: str, threshold: float = 0.6) -> Optional[tuple[str, float]]:
+        """尝试从缓存获取分类"""
+        keywords = self._extract_keywords(title)
+        if len(keywords) < 2:
+            return None
+        
+        best_match = None
+        best_similarity = 0.0
+        
+        for cached_title, data in self.cache.items():
+            cached_kw = set(data.get('keywords', []))
+            similarity = self._calc_similarity(keywords, cached_kw)
+            
+            if similarity > best_similarity and similarity >= threshold:
+                best_similarity = similarity
+                best_match = data
+        
+        if best_match:
+            # 更新使用时间
+            logger.debug(f"Cache hit for '{title[:30]}...' -> {best_match['category']} (sim={best_similarity:.2f})")
+            return best_match['category'], best_match.get('confidence', 0.8) * best_similarity
+        
+        return None
+    
+    def add_to_cache(self, title: str, category: str, confidence: float):
+        """添加分类结果到缓存"""
+        keywords = self._extract_keywords(title)
+        if len(keywords) < 2:
+            return
+        
+        self.cache[title] = {
+            'category': category,
+            'confidence': confidence,
+            'keywords': list(keywords),
+            'used_at': datetime.now().isoformat()
+        }
+        
+        # 定期保存（每10个新条目保存一次）
+        if len(self.cache) % 10 == 0:
+            self._save_cache()
+    
+    def save(self):
+        """手动保存缓存"""
+        self._save_cache()
+
+
 class NewsProcessor:
     """新闻处理器"""
     
@@ -36,6 +134,7 @@ class NewsProcessor:
         self.categories = self._load_categories(categories_config)
         self.key_people = self._load_key_people(people_config)
         self.embeddings_cache = {}
+        self.classification_cache = ClassificationCache()  # 新增：分类缓存
         
         # 初始化LLM客户端
         from llm_client import get_llm_client
@@ -272,17 +371,34 @@ class NewsProcessor:
         return unique_articles
     
     async def process_article(self, article: RawArticle) -> ProcessedArticle:
-        """处理单篇文章（优化版：合并翻译+摘要+分类为一次LLM调用）"""
+        """处理单篇文章（优化版：合并翻译+摘要+分类为一次LLM调用，支持分类缓存）"""
+        
+        # 先尝试从缓存获取分类
+        cached_category = self.classification_cache.get_cached_category(article.title)
+        
         # 一次调用完成翻译、摘要和分类
         result = await self.translate_summarize_and_classify(article)
         
-        # 解析分类
+        # 解析分类（优先使用 LLM 结果，缓存作为参考）
         try:
             category = Category(result.get('category', 'business'))
             confidence = result.get('category_confidence', 0.8)
         except ValueError:
-            category = Category.BUSINESS
-            confidence = 0.5
+            # 如果 LLM 返回无效分类，尝试使用缓存
+            if cached_category:
+                try:
+                    category = Category(cached_category[0])
+                    confidence = cached_category[1]
+                    logger.info(f"Using cached category for '{article.title[:30]}...': {category.value}")
+                except ValueError:
+                    category = Category.BUSINESS
+                    confidence = 0.5
+            else:
+                category = Category.BUSINESS
+                confidence = 0.5
+        
+        # 将分类结果添加到缓存
+        self.classification_cache.add_to_cache(article.title, category.value, confidence)
         
         # 识别关键人物
         mentioned_people = self.identify_key_people(article, result)
@@ -328,6 +444,9 @@ class NewsProcessor:
         
         processed = [r for r in results if r is not None]
         logger.info(f"Processed {len(processed)}/{len(articles)} articles")
+        
+        # 保存分类缓存
+        self.classification_cache.save()
         
         # 去重
         processed = await self.deduplicate(processed)
