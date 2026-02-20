@@ -159,12 +159,18 @@ class NewsProcessor:
     async def translate_summarize_and_classify(self, article: RawArticle) -> dict:
         """翻译、生成摘要并分类（合并为一次LLM调用，节省token）"""
         
-        system_prompt = """你是一位专业的科技新闻编辑。你的任务是：
+        system_prompt = """你是一位专业的科技新闻编辑，擅长高度凝练信息。你的任务是：
 1. 将新闻标题翻译成中文（如已是中文则保持原样）
-2. 生成详细的中文摘要（3-5段，包含所有关键信息）
-3. 提取3-5个关键要点
-4. 分析这条新闻的行业影响
+2. 生成精炼的中文摘要（2-3句话，抓住核心事实）
+3. 提取2-3个关键要点（每个要点一句话）
+4. 简述影响和风险（1-2句话）
 5. 对文章进行分类
+
+【重要】摘要要求：
+- 简洁优先：用最少的字传达最关键的信息
+- 核心要素：谁做了什么、结果如何、为什么重要
+- 避免废话：不要重复标题内容，不要套话
+- 读者可以点击原文查看详情，所以摘要只需概括核心
 
 可选分类：
 - ai: AI类（AI技术、Agent、AI Coding、新功能）
@@ -192,12 +198,12 @@ class NewsProcessor:
 正文:
 {article.content[:5000] if article.content else '(无正文)'}
 
-请输出JSON：
+请输出JSON（注意：摘要要精炼，2-3句话即可）：
 {{
     "title_zh": "中文标题",
-    "summary_zh": "详细中文摘要（3-5段）",
-    "key_points": ["要点1", "要点2", "要点3"],
-    "impact_analysis": "对行业的影响分析",
+    "summary_zh": "精炼摘要（2-3句话，抓住核心）",
+    "key_points": ["要点1", "要点2"],
+    "impact_risk": "影响与风险（1-2句话）",
     "category": "分类ID",
     "category_confidence": 0.95
 }}"""
@@ -419,7 +425,7 @@ class NewsProcessor:
             category_confidence=confidence,
             summary_zh=result.get('summary_zh', ''),
             key_points=result.get('key_points', []),
-            impact_analysis=result.get('impact_analysis', ''),
+            impact_analysis=result.get('impact_risk', result.get('impact_analysis', '')),  # 兼容新旧字段名
             images=article.image_urls,
             video_urls=article.video_urls,
             language=article.language,
