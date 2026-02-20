@@ -57,14 +57,29 @@ class NewsProcessor:
         """调用LLM"""
         return await self.llm.chat(prompt, system)
     
-    async def translate_and_summarize(self, article: RawArticle) -> dict:
-        """翻译并生成摘要"""
+    async def translate_summarize_and_classify(self, article: RawArticle) -> dict:
+        """翻译、生成摘要并分类（合并为一次LLM调用，节省token）"""
         
-        system_prompt = """你是一位专业的科技新闻编辑和翻译。你的任务是：
+        system_prompt = """你是一位专业的科技新闻编辑。你的任务是：
 1. 将新闻标题翻译成中文（如已是中文则保持原样）
 2. 生成详细的中文摘要（3-5段，包含所有关键信息）
 3. 提取3-5个关键要点
 4. 分析这条新闻的行业影响
+5. 对文章进行分类
+
+可选分类：
+- ai: AI类（AI技术、Agent、AI Coding、新功能）
+- robotics: 机器人类（人形机器人、工业机器人、军用机器人）
+- embodied_ai: 具身智能类（AI眼镜、可穿戴设备、新型交互）
+- semiconductor: 半导体行业类（芯片、存储、制程、设备）
+- auto: 汽车类（新能源车、燃油车、自动驾驶）
+- health: 健康医疗类（生物科技、医疗器械、制药）
+- economy: 经济政策类（宏观经济、产业政策、贸易）
+- business: 商业科技类（企业动态、并购、融资）
+- politics: 政治政策类（科技监管、地缘政治）
+- investment: 投资财经类（股市、风投、IPO）
+- consumer_electronics: 消费电子类（手机、电脑、智能家居）
+- key_people: 关键人物发言（科技大佬观点和预测）
 
 输出JSON格式，不要包含markdown标记。"""
 
@@ -76,14 +91,16 @@ class NewsProcessor:
 语言: {article.language}
 
 正文:
-{article.content[:8000] if article.content else '(无正文)'}
+{article.content[:5000] if article.content else '(无正文)'}
 
 请输出JSON：
 {{
     "title_zh": "中文标题",
     "summary_zh": "详细中文摘要（3-5段）",
     "key_points": ["要点1", "要点2", "要点3"],
-    "impact_analysis": "对行业的影响分析"
+    "impact_analysis": "对行业的影响分析",
+    "category": "分类ID",
+    "category_confidence": 0.95
 }}"""
 
         result = await self._call_llm(prompt, system_prompt)
@@ -102,12 +119,27 @@ class NewsProcessor:
                 "title_zh": article.title,
                 "summary_zh": article.content[:500] if article.content else "",
                 "key_points": [],
-                "impact_analysis": ""
+                "impact_analysis": "",
+                "category": "business",
+                "category_confidence": 0.5
             }
     
+    # 保留旧方法以兼容，但标记为废弃
+    async def translate_and_summarize(self, article: RawArticle) -> dict:
+        """[已废弃] 请使用 translate_summarize_and_classify"""
+        result = await self.translate_summarize_and_classify(article)
+        return {k: v for k, v in result.items() if k not in ['category', 'category_confidence']}
+    
     async def classify(self, article: RawArticle, translation: dict) -> tuple[Category, float]:
-        """对文章进行分类"""
+        """[已废弃] 分类已合并到 translate_summarize_and_classify"""
+        # 如果translation里已有分类信息，直接使用
+        if 'category' in translation:
+            try:
+                return Category(translation['category']), translation.get('category_confidence', 0.8)
+            except ValueError:
+                pass
         
+        # 否则单独调用（兼容旧代码）
         system_prompt = """你是一位新闻分类专家。根据文章内容，选择最合适的分类。
 
 可选分类：
@@ -240,34 +272,39 @@ class NewsProcessor:
         return unique_articles
     
     async def process_article(self, article: RawArticle) -> ProcessedArticle:
-        """处理单篇文章"""
-        # 翻译和摘要
-        translation = await self.translate_and_summarize(article)
+        """处理单篇文章（优化版：合并翻译+摘要+分类为一次LLM调用）"""
+        # 一次调用完成翻译、摘要和分类
+        result = await self.translate_summarize_and_classify(article)
         
-        # 分类
-        category, confidence = await self.classify(article, translation)
+        # 解析分类
+        try:
+            category = Category(result.get('category', 'business'))
+            confidence = result.get('category_confidence', 0.8)
+        except ValueError:
+            category = Category.BUSINESS
+            confidence = 0.5
         
         # 识别关键人物
-        mentioned_people = self.identify_key_people(article, translation)
+        mentioned_people = self.identify_key_people(article, result)
         
         # 如果提到关键人物且是发言内容，改为key_people分类
-        if mentioned_people and any(word in translation.get('summary_zh', '') 
+        if mentioned_people and any(word in result.get('summary_zh', '') 
                                      for word in ['表示', '称', '认为', '宣布', '透露', '预测']):
             category = Category.KEY_PEOPLE
         
         return ProcessedArticle(
             id=article.id,
             title_original=article.title,
-            title_zh=translation.get('title_zh', article.title),
+            title_zh=result.get('title_zh', article.title),
             url=article.url,
             source=article.source,
             published_at=article.published_at,
             category=category,
             category_confidence=confidence,
-            summary_zh=translation.get('summary_zh', ''),
-            key_points=translation.get('key_points', []),
-            impact_analysis=translation.get('impact_analysis', ''),
-            images=article.image_urls,  # TODO: 下载到本地
+            summary_zh=result.get('summary_zh', ''),
+            key_points=result.get('key_points', []),
+            impact_analysis=result.get('impact_analysis', ''),
+            images=article.image_urls,
             video_urls=article.video_urls,
             language=article.language,
             mentioned_people=mentioned_people
