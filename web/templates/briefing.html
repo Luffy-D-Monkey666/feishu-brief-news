@@ -463,14 +463,15 @@
 
         <!-- 分类预测 -->
         {% if briefing.get('predictions') %}
-        {% set cat_predictions = briefing.predictions | selectattr('category', 'equalto', category) | list %}
-        {% if cat_predictions %}
+        {% set ns = namespace(has_pred=false) %}
+        {% for pred in briefing.predictions if pred.category == category %}{% set ns.has_pred = true %}{% endfor %}
+        {% if ns.has_pred %}
         <div class="mt-6 rounded-xl p-5" style="background: linear-gradient(135deg, rgba(250,204,21,0.08) 0%, rgba(251,191,36,0.05) 100%); border: 1px solid rgba(250,204,21,0.15);">
           <h4 class="text-sm font-semibold mb-4 flex items-center gap-2" style="color: #facc15;">
             <span>🎯</span> 该领域预测
           </h4>
           <div class="grid sm:grid-cols-2 gap-3">
-            {% for pred in cat_predictions %}
+            {% for pred in briefing.predictions if pred.category == category %}
             <div class="rounded-lg p-3" style="background: rgba(0,0,0,0.2);">
               <div class="text-xs font-medium mb-2" style="color: rgba(250,204,21,0.85);">
                 📆 {{ {'week':'未来一周','month':'未来一个月','half_year':'未来半年','year':'未来一年'}.get(pred.timeframe, pred.timeframe) }}
