@@ -295,21 +295,17 @@
         <span class="toc-article-summary">{{ article.summary_zh[:50] if article.summary_zh else '' }}{% if article.summary_zh and article.summary_zh|length > 50 %}…{% endif %}</span>
       </a>
       {% endfor %}
+      {% if briefing.get('predictions') %}
+      <a class="toc-article toc-prediction-link"
+         href="javascript:void(0)"
+         onclick="scrollToSection('prediction-{{ category }}'); return false;">
+        <span class="toc-article-title" style="color: #facc15;">🎯 预测</span>
+      </a>
+      {% endif %}
     </div>
     {% endfor %}
 
-    <!-- 预测章节 -->
-    {% if briefing.get('predictions') %}
-    <div style="margin-top:8px; padding: 0 16px 0 16px;">
-      <div style="height:1px;background:rgba(255,255,255,0.06);margin-bottom:8px;"></div>
-    </div>
-    <div class="toc-category" onclick="scrollToSection('predictions-section')">
-      <div class="toc-category-left">
-        <span class="toc-category-emoji">🎯</span>
-        <span class="toc-category-name">未来预测</span>
-      </div>
-    </div>
-    {% endif %}
+    <!-- 底部预测总入口已移除，预测分散到各分类 -->
   </aside>
 
   <!-- 移动端遮罩 -->
@@ -426,8 +422,23 @@
             </div>
 
             <div class="rounded-xl p-4 mb-4" style="background: var(--bg-elevated); border: 1px solid var(--border);">
-              <h4 class="text-sm font-medium mb-2" style="color: var(--accent);">📋 摘要</h4>
-              <p class="text-sm leading-relaxed" style="color: var(--text-secondary);">{{ article.summary_zh[:500] }}{% if article.summary_zh|length > 500 %}...{% endif %}</p>
+              <h4 class="text-sm font-medium mb-3" style="color: var(--accent);">📋 摘要</h4>
+              <div class="text-sm leading-relaxed space-y-2" style="color: var(--text-secondary);">
+                {% set paragraphs = article.summary_zh.split('\n\n') if article.summary_zh else [] %}
+                {% if paragraphs|length > 1 %}
+                  {% for para in paragraphs[:4] if para.strip() %}
+                  <p>{{ para.strip()[:300] }}{% if para.strip()|length > 300 %}...{% endif %}</p>
+                  {% endfor %}
+                {% else %}
+                  {% set sentences = article.summary_zh.replace('。', '。\n').split('\n') if article.summary_zh else [] %}
+                  {% for sent in sentences[:6] if sent.strip() %}
+                  <p class="flex items-start gap-2">
+                    <span style="color: var(--accent); margin-top: 6px; font-size: 6px;">●</span>
+                    <span>{{ sent.strip() }}</span>
+                  </p>
+                  {% endfor %}
+                {% endif %}
+              </div>
             </div>
 
             {% if article.key_points %}
@@ -466,7 +477,7 @@
         {% set ns = namespace(has_pred=false) %}
         {% for pred in briefing.predictions if pred.category == category %}{% set ns.has_pred = true %}{% endfor %}
         {% if ns.has_pred %}
-        <div class="mt-6 rounded-xl p-5" style="background: linear-gradient(135deg, rgba(250,204,21,0.08) 0%, rgba(251,191,36,0.05) 100%); border: 1px solid rgba(250,204,21,0.15);">
+        <div id="prediction-{{ category }}" class="mt-6 rounded-xl p-5" style="background: linear-gradient(135deg, rgba(250,204,21,0.08) 0%, rgba(251,191,36,0.05) 100%); border: 1px solid rgba(250,204,21,0.15);">
           <h4 class="text-sm font-semibold mb-4 flex items-center gap-2" style="color: #facc15;">
             <span>🎯</span> 该领域预测
           </h4>
@@ -476,7 +487,14 @@
               <div class="text-xs font-medium mb-2" style="color: rgba(250,204,21,0.85);">
                 📆 {{ {'week':'未来一周','month':'未来一个月','half_year':'未来半年','year':'未来一年'}.get(pred.timeframe, pred.timeframe) }}
               </div>
-              <p class="text-sm leading-relaxed" style="color: var(--text-secondary);">{{ pred.content[:200] }}{% if pred.content|length > 200 %}...{% endif %}</p>
+              <ul class="text-sm space-y-1" style="color: var(--text-secondary);">
+                {% for line in pred.content.split('\n') if line.strip() %}
+                <li class="flex items-start gap-2">
+                  <span style="color: #facc15; margin-top: 6px; font-size: 6px;">●</span>
+                  <span>{{ line.strip().lstrip('0123456789.、 ') }}</span>
+                </li>
+                {% endfor %}
+              </ul>
             </div>
             {% endfor %}
           </div>
@@ -486,31 +504,6 @@
       </section>
       <div class="divider mb-12"></div>
       {% endfor %}
-
-      <!-- Predictions -->
-      {% if briefing.get('predictions') %}
-      <section class="animate-in" id="predictions-section" style="animation-delay: 0.5s;">
-        <h2 class="section-title text-center mb-8 flex items-center justify-center gap-3">
-          <span class="text-2xl">🎯</span>
-          <span>未来预测</span>
-        </h2>
-        <div class="grid sm:grid-cols-2 gap-4">
-          {% for timeframe, title in [('week', '📆 未来一周'), ('month', '📆 未来一个月'), ('half_year', '📆 未来半年'), ('year', '📆 未来一年')] %}
-          <div class="card p-6" style="background: linear-gradient(135deg, rgba(102,126,234,0.08) 0%, rgba(118,75,162,0.08) 100%);">
-            <h3 class="font-semibold mb-4">{{ title }}</h3>
-            <div class="space-y-3">
-              {% for pred in briefing.predictions if pred.timeframe == timeframe %}
-              <div class="text-sm">
-                <span class="font-medium" style="color: var(--accent);">{{ pred.category_name or pred.category }}:</span>
-                <span class="ml-1" style="color: var(--text-secondary);">{{ pred.content[:120] }}{% if pred.content|length > 120 %}...{% endif %}</span>
-              </div>
-              {% endfor %}
-            </div>
-          </div>
-          {% endfor %}
-        </div>
-      </section>
-      {% endif %}
 
       {% elif briefing.get('markdown') %}
       <section class="card p-8 animate-in">
