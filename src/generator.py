@@ -42,36 +42,59 @@ class MarkdownGenerator:
         self.output_dir.mkdir(parents=True, exist_ok=True)
     
     def _format_article(self, article: ProcessedArticle, index: int) -> str:
-        """格式化单篇文章（精简版）"""
+        """格式化单篇文章"""
         parts = []
         
-        # 标题（中文为主，原文作为副标题）
-        parts.append(f"### {index}. {article.title_zh}")
-        parts.append(f"*{article.title_original}*")
+        # 双语标题
+        parts.append(f"### {index}. {article.title_original}")
+        parts.append(f"### {article.title_zh}")
         parts.append("")
         
-        # 元信息（一行搞定）
-        meta = f"📍 {article.source} · {article.published_at.strftime('%m-%d %H:%M')}"
+        # 元信息
+        parts.append(f"**来源:** {article.source} | **时间:** {article.published_at.strftime('%Y-%m-%d %H:%M')}")
+        parts.append("")
+        
+        # 提及的关键人物
         if article.mentioned_people:
-            meta += f" · 👤 {', '.join(article.mentioned_people)}"
-        parts.append(meta)
-        parts.append("")
+            parts.append(f"**提及人物:** {', '.join(article.mentioned_people)}")
+            parts.append("")
         
-        # 摘要（核心内容）
+        # 详细摘要
+        parts.append("**📰 详细摘要:**")
+        parts.append("")
         parts.append(article.summary_zh)
         parts.append("")
         
-        # 要点 + 影响风险（合并为紧凑列表）
-        if article.key_points or article.impact_analysis:
-            for point in article.key_points[:3]:
-                parts.append(f"• {point}")
-            if article.impact_analysis:
-                parts.append(f"⚡ {article.impact_analysis}")
+        # 关键要点
+        if article.key_points:
+            parts.append("**🔑 关键要点:**")
+            for point in article.key_points:
+                parts.append(f"- {point}")
+            parts.append("")
+        
+        # 影响分析
+        if article.impact_analysis:
+            parts.append("**📈 影响分析:**")
+            parts.append(article.impact_analysis)
             parts.append("")
         
         # 原文链接
-        parts.append(f"🔗 [查看原文]({article.url})")
+        parts.append(f"**🔗 原文链接:** [{article.url}]({article.url})")
         parts.append("")
+        
+        # 图片
+        if article.images:
+            parts.append("**🖼️ 相关图片:**")
+            for img in article.images[:3]:  # 最多3张
+                parts.append(f"![]({img})")
+            parts.append("")
+        
+        # 视频
+        if article.video_urls:
+            parts.append("**📹 相关视频:**")
+            for video in article.video_urls[:2]:  # 最多2个
+                parts.append(f"- {video}")
+            parts.append("")
         
         # 分隔线
         parts.append("---")
