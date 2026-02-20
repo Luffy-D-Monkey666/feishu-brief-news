@@ -157,27 +157,6 @@
     color: rgba(167,139,250,0.7);
   }
   .toc-article.reading::before { background: var(--accent, #a78bfa); }
-  
-  /* 分类预测条目 */
-  .toc-category-prediction {
-    padding: 6px 16px 6px 38px;
-    font-size: 10px;
-    line-height: 1.4;
-    color: rgba(250,204,21,0.7);
-    background: rgba(250,204,21,0.05);
-    border-left: 2px solid transparent;
-    margin: 4px 0;
-  }
-  .toc-category-prediction-label {
-    font-weight: 500;
-    color: rgba(250,204,21,0.85);
-    margin-bottom: 2px;
-  }
-  .toc-category-prediction-text {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
 
   /* 进度条 */
   .toc-progress {
@@ -316,17 +295,6 @@
         <span class="toc-article-summary">{{ article.summary_zh[:50] if article.summary_zh else '' }}{% if article.summary_zh and article.summary_zh|length > 50 %}…{% endif %}</span>
       </a>
       {% endfor %}
-      {% if briefing.get('predictions') %}
-      {% set category_predictions = briefing.predictions | selectattr('category', 'equalto', category) | list %}
-      {% if category_predictions %}
-      <div class="toc-category-prediction">
-        <div class="toc-category-prediction-label">🎯 预测</div>
-        {% for pred in category_predictions[:2] %}
-        <div class="toc-category-prediction-text">{{ pred.timeframe_name if pred.timeframe_name else {'week':'一周','month':'一个月','half_year':'半年','year':'一年'}.get(pred.timeframe, pred.timeframe) }}: {{ pred.content[:35] }}{% if pred.content|length > 35 %}…{% endif %}</div>
-        {% endfor %}
-      </div>
-      {% endif %}
-      {% endif %}
     </div>
     {% endfor %}
 
