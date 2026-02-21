@@ -4,7 +4,7 @@ Daily Briefing Web - 每日全球科技简报网站
 基于 Flask 的简报阅读网站
 """
 
-from flask import Flask, render_template, jsonify, send_from_directory
+from flask import Flask, render_template, jsonify, send_from_directory, request
 from flask_cors import CORS
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -54,6 +54,61 @@ def load_briefing(date_str: str = None) -> dict:
     return None
 
 
+def calc_article_score(article: dict) -> float:
+    """计算文章热度分数（用于首页排序）"""
+    score = 0.0
+    
+    # 1. 分类权重：AI、关键人物 > 其他
+    category_weights = {
+        'ai': 1.5,
+        'key_people': 1.4,
+        'semiconductor': 1.2,
+        'auto': 1.1,
+        'robotics': 1.1,
+        'politics': 1.0,
+        'business': 0.9,
+        'consumer_electronics': 0.8,
+    }
+    category = article.get('category', 'business')
+    score += category_weights.get(category, 0.8)
+    
+    # 2. 提及关键人物加分
+    mentioned_people = article.get('mentioned_people', [])
+    if mentioned_people:
+        score += 0.5 * min(len(mentioned_people), 3)
+    
+    # 3. 多来源报道加分
+    source_count = article.get('source_count', 1)
+    if source_count > 1:
+        score += 0.3 * min(source_count - 1, 5)
+    
+    # 4. 来源权威性
+    tier1_sources = ['reuters', 'bloomberg', 'wired', 'the verge', 'techcrunch', 
+                     '36氪', '财新', '机器之心', '量子位']
+    source = article.get('source', '').lower()
+    if any(t in source for t in tier1_sources):
+        score += 0.3
+    
+    return score
+
+
+def get_hot_articles(briefing: dict, limit: int = 8) -> list:
+    """获取热点文章（按分数排序）"""
+    all_articles = []
+    articles_by_category = briefing.get('articles_by_category', {})
+    
+    for category, articles in articles_by_category.items():
+        for article in articles:
+            article_copy = article.copy()
+            article_copy['_score'] = calc_article_score(article)
+            all_articles.append(article_copy)
+    
+    # 按分数降序排序
+    all_articles.sort(key=lambda x: x['_score'], reverse=True)
+    
+    return all_articles[:limit]
+
+
 def get_available_dates() -> list:
     """获取所有可用的简报日期"""
     dates = []
@@ -80,7 +135,14 @@ def index():
     dates = get_available_dates()
     latest_date = dates[0] if dates else None
     latest_briefing = load_briefing(latest_date) if latest_date else None
-    return render_template('index.html', dates=dates, latest_date=latest_date, latest_briefing=latest_briefing)
+    
+    # 计算热点文章排序
+    hot_articles = []
+    if latest_briefing:
+        hot_articles = get_hot_articles(latest_briefing, limit=8)
+    
+    return render_template('index.html', dates=dates, latest_date=latest_date, 
+                          latest_briefing=latest_briefing, hot_articles=hot_articles)
 
 
 @app.route('/briefing/<date_str>')
@@ -115,6 +177,73 @@ def api_latest():
     if not dates:
         return jsonify({'error': 'No briefings available'}), 404
     return jsonify(load_briefing(dates[0]))
+
+
+@app.route('/search')
+def search_page():
+    """搜索页面"""
+    query = request.args.get('q', '').strip()
+    results = []
+    
+    if query:
+        # 搜索所有日期的简报
+        dates = get_available_dates()
+        for date_str in dates[:30]:  # 最多搜索最近30天
+            briefing = load_briefing(date_str)
+            if not briefing:
+                continue
+            
+            articles_by_category = briefing.get('articles_by_category', {})
+            for category, articles in articles_by_category.items():
+                for article in articles:
+                    # 搜索标题和摘要
+                    title = (article.get('title_zh', '') + ' ' + article.get('title_original', '')).lower()
+                    summary = article.get('summary_zh', '').lower()
+                    query_lower = query.lower()
+                    
+                    if query_lower in title or query_lower in summary:
+                        results.append({
+                            'article': article,
+                            'date': date_str,
+                            'match_in': 'title' if query_lower in title else 'summary'
+                        })
+        
+        # 按日期排序（最新优先）
+        results.sort(key=lambda x: x['date'], reverse=True)
+    
+    return render_template('search.html', query=query, results=results[:50])
+
+
+@app.route('/api/search')
+def api_search():
+    """API: 搜索文章"""
+    query = request.args.get('q', '').strip()
+    if not query:
+        return jsonify({'error': 'Missing query parameter'}), 400
+    
+    results = []
+    dates = get_available_dates()
+    
+    for date_str in dates[:30]:
+        briefing = load_briefing(date_str)
+        if not briefing:
+            continue
+        
+        articles_by_category = briefing.get('articles_by_category', {})
+        for category, articles in articles_by_category.items():
+            for article in articles:
+                title = (article.get('title_zh', '') + ' ' + article.get('title_original', '')).lower()
+                summary = article.get('summary_zh', '').lower()
+                query_lower = query.lower()
+                
+                if query_lower in title or query_lower in summary:
+                    results.append({
+                        **article,
+                        'date': date_str
+                    })
+    
+    results.sort(key=lambda x: x['date'], reverse=True)
+    return jsonify({'query': query, 'count': len(results), 'results': results[:50]})
 
 
 # 健康检查 - 尽可能轻量

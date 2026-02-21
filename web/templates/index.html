@@ -11,7 +11,15 @@
                 <span class="text-xl">📰</span>
                 <span class="font-semibold">科技简报</span>
             </div>
-            <p class="text-xs text-zinc-500 hidden sm:block">AI驱动 · 66+ 全球科技源 · 每日更新</p>
+            <div class="flex items-center gap-4">
+                <p class="text-xs text-zinc-500 hidden sm:block">AI驱动 · 66+ 全球科技源 · 每日更新</p>
+                <a href="/search" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-800/50 hover:bg-zinc-700/50 text-zinc-400 hover:text-zinc-200 transition-colors text-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                    <span class="hidden sm:inline">搜索</span>
+                </a>
+            </div>
         </div>
     </header>
     
@@ -80,14 +88,7 @@
                     <span>🔥</span> 热点新闻
                 </h2>
                 <div class="space-y-4">
-                    {% set all_articles = [] %}
-                    {% for category, articles in latest_briefing.articles_by_category.items() %}
-                        {% for article in articles %}
-                            {% set _ = all_articles.append(article) %}
-                        {% endfor %}
-                    {% endfor %}
-                    
-                    {% for article in all_articles[:8] %}
+                    {% for article in hot_articles %}
                     <a href="/briefing/{{ latest_date }}#article-{{ article.id }}" class="card p-4 block hover:border-zinc-600 group">
                         <div class="flex items-start gap-3">
                             <span class="category-badge cat-{{ article.category }}" style="background: var(--cat-bg); color: var(--cat-color); flex-shrink: 0; font-size: 11px; padding: 2px 8px;">
@@ -109,9 +110,9 @@
                     </a>
                     {% endfor %}
                     
-                    {% if all_articles|length > 8 %}
+                    {% if latest_briefing.total_articles and latest_briefing.total_articles > 8 %}
                     <a href="/briefing/{{ latest_date }}" class="block text-center py-3 text-sm text-blue-400 hover:text-blue-300">
-                        查看全部 {{ all_articles|length }} 条新闻 →
+                        查看全部 {{ latest_briefing.total_articles }} 条新闻 →
                     </a>
                     {% endif %}
                 </div>
