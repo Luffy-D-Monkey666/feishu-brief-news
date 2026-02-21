@@ -159,12 +159,22 @@ class NewsProcessor:
     async def translate_summarize_and_classify(self, article: RawArticle) -> dict:
         """翻译、生成摘要并分类（合并为一次LLM调用，节省token）"""
         
-        system_prompt = """你是一位专业的科技新闻编辑。你的任务是：
+        system_prompt = """你是一位资深科技行业分析师。你的任务是：
 1. 将新闻标题翻译成中文（如已是中文则保持原样）
-2. 生成详细的中文摘要（3-5段，包含所有关键信息）
-3. 提取3-5个关键要点
-4. 分析这条新闻的行业影响
+2. 生成精炼的中文摘要（2-3段，只保留核心信息，不要废话）
+3. 提取2-3个关键要点（每个要点一句话）
+4. 分析这条新闻的行业影响（重要：见下方要求）
 5. 对文章进行分类
+
+【影响分析要求】
+- 只写一段话，不超过80字
+- 直接说结论，不要"首先、其次、最后"
+- 聚焦最核心的一个影响，不要面面俱到
+- 如果新闻本身影响有限，就写"影响有限"，不要硬凑
+
+【摘要要求】
+- 如果原文抓取失败或内容不完整，只根据标题生成一句话摘要
+- 不要写"由于访问限制未能获取"之类的废话
 
 可选分类：
 - ai: AI类（AI技术、Agent、AI Coding、新功能）
@@ -190,14 +200,14 @@ class NewsProcessor:
 语言: {article.language}
 
 正文:
-{article.content[:5000] if article.content else '(无正文)'}
+{article.content[:5000] if article.content else '(无正文，请仅根据标题生成简短摘要)'}
 
 请输出JSON：
 {{
     "title_zh": "中文标题",
-    "summary_zh": "详细中文摘要（3-5段）",
-    "key_points": ["要点1", "要点2", "要点3"],
-    "impact_analysis": "对行业的影响分析",
+    "summary_zh": "精炼摘要（2-3段）",
+    "key_points": ["要点1", "要点2"],
+    "impact_analysis": "一段话影响分析（不超过80字）",
     "category": "分类ID",
     "category_confidence": 0.95
 }}"""
