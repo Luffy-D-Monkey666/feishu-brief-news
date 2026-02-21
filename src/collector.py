@@ -10,6 +10,7 @@ News Collector - 新闻采集模块
 
 import asyncio
 import hashlib
+import random
 from datetime import datetime, timedelta
 from typing import Optional
 import feedparser
@@ -80,7 +81,10 @@ class NewsCollector:
             return []
             
         try:
-            response = await self.client.get(source.rss_url)
+            response = await self._request_with_retry(source.rss_url)
+            if not response or response.status_code != 200:
+                logger.warning(f"Failed to fetch RSS from {source.name}: HTTP {response.status_code if response else 'None'}")
+                return []
             feed = feedparser.parse(response.text)
             
             articles = []
@@ -130,12 +134,45 @@ class NewsCollector:
             logger.error(f"Failed to fetch RSS from {source.name}: {e}")
             return []
     
+    async def _request_with_retry(self, url: str, max_retries: int = 3) -> Optional[httpx.Response]:
+        """带重试和延迟的 HTTP 请求"""
+        for attempt in range(max_retries):
+            try:
+                # 随机延迟 1-3 秒，避免触发速率限制
+                if attempt > 0:
+                    delay = random.uniform(2, 5)
+                    logger.debug(f"Retry {attempt + 1}/{max_retries} for {url[:50]}..., waiting {delay:.1f}s")
+                    await asyncio.sleep(delay)
+                else:
+                    # 首次请求也加一点随机延迟
+                    await asyncio.sleep(random.uniform(0.5, 1.5))
+                
+                response = await self.client.get(url)
+                
+                # 处理 429 Too Many Requests
+                if response.status_code == 429:
+                    retry_after = int(response.headers.get('Retry-After', 10))
+                    logger.warning(f"Rate limited (429) for {url[:50]}..., waiting {retry_after}s")
+                    await asyncio.sleep(retry_after)
+                    continue
+                
+                return response
+                
+            except httpx.TimeoutException:
+                logger.warning(f"Timeout for {url[:50]}... (attempt {attempt + 1}/{max_retries})")
+            except Exception as e:
+                logger.error(f"Request failed for {url[:50]}...: {e}")
+        
+        return None
+    
     async def fetch_web_jina(self, url: str) -> Optional[str]:
         """使用Jina Reader API提取网页内容"""
         try:
             jina_url = f"https://r.jina.ai/{url}"
-            response = await self.client.get(jina_url)
-            return response.text
+            response = await self._request_with_retry(jina_url)
+            if response and response.status_code == 200:
+                return response.text
+            return None
         except Exception as e:
             logger.error(f"Jina fetch failed for {url}: {e}")
             return None
@@ -143,14 +180,16 @@ class NewsCollector:
     async def fetch_web_trafilatura(self, url: str) -> Optional[str]:
         """使用trafilatura提取网页内容"""
         try:
-            response = await self.client.get(url)
-            content = trafilatura.extract(
-                response.text,
-                include_comments=False,
-                include_tables=True,
-                include_images=True
-            )
-            return content
+            response = await self._request_with_retry(url)
+            if response and response.status_code == 200:
+                content = trafilatura.extract(
+                    response.text,
+                    include_comments=False,
+                    include_tables=True,
+                    include_images=True
+                )
+                return content
+            return None
         except Exception as e:
             logger.error(f"Trafilatura fetch failed for {url}: {e}")
             return None

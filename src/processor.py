@@ -511,8 +511,50 @@ class NewsProcessor:
             mentioned_people=mentioned_people
         )
     
+    def _should_skip_article(self, article: RawArticle) -> bool:
+        """判断是否应该跳过此文章（低质量内容过滤）"""
+        title_lower = article.title.lower()
+        
+        # 标题关键词黑名单（游戏攻略、促销、非科技内容）
+        skip_keywords = [
+            # 游戏攻略类
+            'hints', 'answers', 'help for', 'wordle', 'strands', 'connections', 'crossword',
+            'nyt ', 'nytimes', 'puzzle', 'today\'s',
+            # 促销导购类
+            'deal', 'deals', 'lowest price', 'best price', 'sale', 'discount', 'save $',
+            'coupon', 'promo', 'black friday', 'prime day', 'cyber monday',
+            # 榜单/测评软文
+            'best of', 'top 10', 'top 5', 'buying guide', 'vs.', ' vs ',
+            # 其他低质量
+            'horoscope', 'zodiac', 'weather forecast', 'lottery',
+            'sponsored', 'advertisement', 'paid content',
+        ]
+        
+        for keyword in skip_keywords:
+            if keyword in title_lower:
+                logger.info(f"Skipping low-quality article: '{article.title[:50]}...' (matched: {keyword})")
+                return True
+        
+        # 来源黑名单（质量太低的源）
+        skip_sources = [
+            # 可以根据实际情况添加
+        ]
+        
+        if article.source.lower() in [s.lower() for s in skip_sources]:
+            logger.info(f"Skipping article from blacklisted source: {article.source}")
+            return True
+        
+        return False
+    
     async def process_all(self, articles: list[RawArticle]) -> list[ProcessedArticle]:
         """处理所有文章"""
+        # 第一步：过滤低质量内容
+        original_count = len(articles)
+        articles = [a for a in articles if not self._should_skip_article(a)]
+        filtered_count = original_count - len(articles)
+        if filtered_count > 0:
+            logger.info(f"Filtered {filtered_count} low-quality articles")
+        
         # 限制并发
         semaphore = asyncio.Semaphore(5)
         
