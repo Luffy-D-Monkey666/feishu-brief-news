@@ -770,5 +770,845 @@
       "latest"
     ],
     "used_at": "2026-02-20T06:41:18.382515"
+  },
+  "OpenAI cuts 2030 compute target to $600b": {
+    "category": "ai",
+    "confidence": 0.95,
+    "keywords": [
+      "compute",
+      "target",
+      "openai",
+      "cuts"
+    ],
+    "used_at": "2026-02-20T23:58:18.344838"
+  },
+  "A 28-year-old American with 7 hours of daily screen time has had roughly $124,000 spent on targeting them with ads": {
+    "category": "business",
+    "confidence": 0.85,
+    "keywords": [
+      "roughly",
+      "spent",
+      "hours",
+      "ads",
+      "american",
+      "old",
+      "has",
+      "year",
+      "them",
+      "targeting",
+      "daily",
+      "had",
+      "time",
+      "screen"
+    ],
+    "used_at": "2026-02-20T23:58:19.284372"
+  },
+  "Amazon flags rise of AI-driven cyber attacks after 600 breaches": {
+    "category": "ai",
+    "confidence": 0.9,
+    "keywords": [
+      "rise",
+      "amazon",
+      "after",
+      "ai",
+      "flags",
+      "attacks",
+      "breaches",
+      "driven",
+      "cyber"
+    ],
+    "used_at": "2026-02-20T23:58:19.358137"
+  },
+  "The idea of using a Raspberry Pi to run OpenClaw makes no sense": {
+    "category": "consumer_electronics",
+    "confidence": 0.85,
+    "keywords": [
+      "run",
+      "openclaw",
+      "idea",
+      "using",
+      "no",
+      "pi",
+      "sense",
+      "makes",
+      "raspberry"
+    ],
+    "used_at": "2026-02-20T23:58:20.974987"
+  },
+  "Unique idea that may be the future of Social media": {
+    "category": "ai",
+    "confidence": 0.9,
+    "keywords": [
+      "be",
+      "social",
+      "idea",
+      "may",
+      "future",
+      "unique",
+      "media"
+    ],
+    "used_at": "2026-02-20T23:58:22.877166"
+  },
+  "The creator economy’s ad revenue problem and India’s AI ambitions": {
+    "category": "business",
+    "confidence": 0.9,
+    "keywords": [
+      "problem",
+      "creator",
+      "ad",
+      "india",
+      "ai",
+      "economy",
+      "ambitions",
+      "revenue"
+    ],
+    "used_at": "2026-02-20T23:58:28.997198"
+  },
+  "Peak XV Partners raises $1.3b for India, Asia Pacific funds": {
+    "category": "investment",
+    "confidence": 0.95,
+    "keywords": [
+      "pacific",
+      "funds",
+      "raises",
+      "india",
+      "peak",
+      "partners",
+      "asia",
+      "xv"
+    ],
+    "used_at": "2026-02-20T23:58:29.581426"
+  },
+  "Wikipedia blacklists Archive.today, starts removing 695,000 archive links | If DDoSing a blog wasn’t bad enough, archive site also tampered with web snapshots.": {
+    "category": "business",
+    "confidence": 0.9,
+    "keywords": [
+      "web",
+      "also",
+      "if",
+      "tampered",
+      "wikipedia",
+      "removing",
+      "archive",
+      "wasn",
+      "links",
+      "blog",
+      "site",
+      "bad",
+      "starts",
+      "ddosing",
+      "enough",
+      "snapshots",
+      "today",
+      "blacklists"
+    ],
+    "used_at": "2026-02-20T23:58:30.041567"
+  },
+  "Xbox's New Boss Promises Not To Flood It With 'Soulless AI Slop'": {
+    "category": "key_people",
+    "confidence": 0.9,
+    "keywords": [
+      "new",
+      "not",
+      "flood",
+      "boss",
+      "ai",
+      "soulless",
+      "xbox",
+      "promises",
+      "slop"
+    ],
+    "used_at": "2026-02-20T23:58:32.754691"
+  },
+  "Wisconsin Reverses Decision to Ban VPNs in Age-Verification Bill": {
+    "category": "politics",
+    "confidence": 0.9,
+    "keywords": [
+      "ban",
+      "decision",
+      "age",
+      "reverses",
+      "vpns",
+      "wisconsin",
+      "verification",
+      "bill"
+    ],
+    "used_at": "2026-02-20T23:58:34.902931"
+  },
+  "The best e-reader to buy right now": {
+    "category": "consumer_electronics",
+    "confidence": 0.98,
+    "keywords": [
+      "buy",
+      "right",
+      "reader",
+      "best",
+      "now"
+    ],
+    "used_at": "2026-02-20T23:58:39.428250"
+  },
+  "Zuckerberg grilled about Meta's strategy to target 'teens' and 'tweens'": {
+    "category": "politics",
+    "confidence": 0.9,
+    "keywords": [
+      "grilled",
+      "teens",
+      "zuckerberg",
+      "about",
+      "tweens",
+      "strategy",
+      "meta",
+      "target"
+    ],
+    "used_at": "2026-02-20T23:58:42.288312"
+  },
+  "US Supreme Court voids tariffs, Apple hit by $3.3b": {
+    "category": "politics",
+    "confidence": 0.9,
+    "keywords": [
+      "voids",
+      "court",
+      "tariffs",
+      "supreme",
+      "hit",
+      "us",
+      "apple"
+    ],
+    "used_at": "2026-02-20T23:58:43.027887"
+  },
+  "指でつまめるトイカメラ「Kodak Charmera」は無駄にぱしゃぱしゃ撮るのが正解！　きっと懐かしい気分になる": {
+    "category": "consumer_electronics",
+    "confidence": 0.9,
+    "keywords": [
+      "気分",
+      "無駄",
+      "charmera",
+      "正解",
+      "kodak"
+    ],
+    "used_at": "2026-02-20T23:58:43.349132"
+  },
+  "PayPal app code error leaked personal info and a 'few' unauthorized transactions": {
+    "category": "business",
+    "confidence": 0.9,
+    "keywords": [
+      "error",
+      "personal",
+      "info",
+      "leaked",
+      "unauthorized",
+      "transactions",
+      "few",
+      "app",
+      "code",
+      "paypal"
+    ],
+    "used_at": "2026-02-20T23:58:44.885857"
+  },
+  "Hackers Expose Discord Age Verification System Issue After Persona Frontend Code Left Wide Open": {
+    "category": "business",
+    "confidence": 0.85,
+    "keywords": [
+      "wide",
+      "open",
+      "discord",
+      "after",
+      "issue",
+      "age",
+      "persona",
+      "frontend",
+      "left",
+      "system",
+      "verification",
+      "expose",
+      "hackers",
+      "code"
+    ],
+    "used_at": "2026-02-20T23:58:49.051619"
+  },
+  "FCC asks stations for \"pro-America\" programming, like daily Pledge of Allegiance": {
+    "category": "politics",
+    "confidence": 0.9,
+    "keywords": [
+      "fcc",
+      "asks",
+      "programming",
+      "america",
+      "pro",
+      "allegiance",
+      "pledge",
+      "like",
+      "daily",
+      "stations"
+    ],
+    "used_at": "2026-02-20T23:58:51.038487"
+  },
+  "Anthropic: No, absolutely not, you may not use third-party harnesses with Claude subs": {
+    "category": "ai",
+    "confidence": 0.95,
+    "keywords": [
+      "third",
+      "not",
+      "harnesses",
+      "you",
+      "use",
+      "anthropic",
+      "no",
+      "subs",
+      "may",
+      "absolutely",
+      "party",
+      "claude"
+    ],
+    "used_at": "2026-02-20T23:58:54.248987"
+  },
+  "Government Docs Reveal New Details About Tesla and Waymo Robotaxis’ Human Babysitters": {
+    "category": "auto",
+    "confidence": 0.9,
+    "keywords": [
+      "new",
+      "reveal",
+      "human",
+      "waymo",
+      "robotaxis",
+      "about",
+      "docs",
+      "government",
+      "details",
+      "tesla",
+      "babysitters"
+    ],
+    "used_at": "2026-02-20T23:58:54.826525"
+  },
+  "Xbox head Phil Spencer is leaving Microsoft": {
+    "category": "business",
+    "confidence": 0.95,
+    "keywords": [
+      "phil",
+      "microsoft",
+      "leaving",
+      "xbox",
+      "head",
+      "spencer"
+    ],
+    "used_at": "2026-02-20T23:59:00.030015"
+  },
+  "Meta's flagship metaverse service leaves VR behind": {
+    "category": "business",
+    "confidence": 0.9,
+    "keywords": [
+      "service",
+      "vr",
+      "leaves",
+      "metaverse",
+      "behind",
+      "flagship",
+      "meta"
+    ],
+    "used_at": "2026-02-20T23:59:00.183156"
+  },
+  "‘This shouldn’t be normal’: developers speak out about bigotry on Steam, the world’s biggest PC gaming storefront | Multiple game creators describe ineffective moderation on the platform, resulting in unchecked hatred in forums and targeted campaigns of negative ‘anti-woke’ reviews": {
+    "category": "business",
+    "confidence": 0.9,
+    "keywords": [
+      "woke",
+      "shouldn",
+      "world",
+      "storefront",
+      "resulting",
+      "biggest",
+      "be",
+      "multiple",
+      "negative",
+      "hatred",
+      "platform",
+      "steam",
+      "bigotry",
+      "anti",
+      "developers",
+      "normal",
+      "describe",
+      "campaigns",
+      "gaming",
+      "game",
+      "creators",
+      "targeted",
+      "out",
+      "reviews",
+      "unchecked",
+      "about",
+      "moderation",
+      "ineffective",
+      "forums",
+      "speak",
+      "pc"
+    ],
+    "used_at": "2026-02-20T23:59:01.113659"
+  },
+  "Kia is refreshing its new electric SUV with a major interior overhaul": {
+    "category": "auto",
+    "confidence": 0.98,
+    "keywords": [
+      "new",
+      "suv",
+      "kia",
+      "refreshing",
+      "overhaul",
+      "major",
+      "interior",
+      "electric"
+    ],
+    "used_at": "2026-02-20T23:59:05.457892"
+  },
+  "Does anyone know which program/setting allows the use of these AI voice models?": {
+    "category": "ai",
+    "confidence": 0.9,
+    "keywords": [
+      "these",
+      "anyone",
+      "does",
+      "which",
+      "use",
+      "voice",
+      "ai",
+      "allows",
+      "know",
+      "models",
+      "program",
+      "setting"
+    ],
+    "used_at": "2026-02-20T23:59:06.126343"
+  },
+  "Samsung Galaxy Unpacked 2026 Is Days Away: Galaxy S26 Rumors, Release Date and More": {
+    "category": "consumer_electronics",
+    "confidence": 0.98,
+    "keywords": [
+      "rumors",
+      "release",
+      "unpacked",
+      "date",
+      "away",
+      "days",
+      "galaxy",
+      "samsung",
+      "more"
+    ],
+    "used_at": "2026-02-20T23:59:11.008884"
+  },
+  "Xbox shakeup: Phil Spencer and Sarah Bond are leaving Microsoft": {
+    "category": "business",
+    "confidence": 0.9,
+    "keywords": [
+      "sarah",
+      "shakeup",
+      "bond",
+      "phil",
+      "microsoft",
+      "leaving",
+      "xbox",
+      "spencer"
+    ],
+    "used_at": "2026-02-20T23:59:11.390493"
+  },
+  "Samsung Galaxy Unpacked 2026: The Galaxy S26 and other devices that might launch on February 25": {
+    "category": "consumer_electronics",
+    "confidence": 0.98,
+    "keywords": [
+      "unpacked",
+      "other",
+      "february",
+      "might",
+      "devices",
+      "galaxy",
+      "launch",
+      "samsung"
+    ],
+    "used_at": "2026-02-20T23:59:13.874260"
+  },
+  "STAT+: DOJ, Ohio attorney general accuse OhioHealth of driving up prices, crowding out competition": {
+    "category": "politics",
+    "confidence": 0.9,
+    "keywords": [
+      "attorney",
+      "competition",
+      "out",
+      "up",
+      "prices",
+      "accuse",
+      "stat",
+      "ohio",
+      "ohiohealth",
+      "driving",
+      "doj",
+      "general",
+      "crowding"
+    ],
+    "used_at": "2026-02-20T23:59:18.725800"
+  },
+  "They Bet Against Trump’s Tariffs. Now They Stand to Make Millions": {
+    "category": "investment",
+    "confidence": 0.9,
+    "keywords": [
+      "they",
+      "trump",
+      "against",
+      "tariffs",
+      "make",
+      "bet",
+      "stand",
+      "millions",
+      "now"
+    ],
+    "used_at": "2026-02-20T23:59:21.057382"
+  },
+  "Real production comparison: ElevenLabs vs PlayHT vs Azure TTS vs Cartesia for phone-quality voice AI": {
+    "category": "ai",
+    "confidence": 0.95,
+    "keywords": [
+      "cartesia",
+      "tts",
+      "quality",
+      "elevenlabs",
+      "phone",
+      "production",
+      "voice",
+      "ai",
+      "comparison",
+      "vs",
+      "real",
+      "azure",
+      "playht"
+    ],
+    "used_at": "2026-02-20T23:59:21.137597"
+  },
+  "YouTuber MKBHD says Tesla 'stopped talking to me' ahead of his new Model Y Performance review": {
+    "category": "business",
+    "confidence": 0.9,
+    "keywords": [
+      "says",
+      "me",
+      "new",
+      "model",
+      "talking",
+      "mkbhd",
+      "his",
+      "performance",
+      "stopped",
+      "review",
+      "ahead",
+      "tesla",
+      "youtuber"
+    ],
+    "used_at": "2026-02-20T23:59:23.407410"
+  },
+  "Today's NYT Connections Hints, Answers and Help for Feb. 21, #986": {
+    "category": "consumer_electronics",
+    "confidence": 0.7,
+    "keywords": [
+      "nyt",
+      "help",
+      "feb",
+      "connections",
+      "hints",
+      "answers",
+      "today"
+    ],
+    "used_at": "2026-02-20T23:59:26.281503"
+  },
+  "Remember HQ? ‘Quiz Daddy’ Scott Rogowsky is back with TextSavvy, a daily mobile game show": {
+    "category": "consumer_electronics",
+    "confidence": 0.85,
+    "keywords": [
+      "remember",
+      "show",
+      "rogowsky",
+      "daddy",
+      "game",
+      "scott",
+      "mobile",
+      "back",
+      "quiz",
+      "daily",
+      "hq",
+      "textsavvy"
+    ],
+    "used_at": "2026-02-20T23:59:30.670690"
+  },
+  "Today's NYT Strands Hints, Answers and Help for Feb. 21 #720": {
+    "category": "consumer_electronics",
+    "confidence": 0.7,
+    "keywords": [
+      "nyt",
+      "help",
+      "feb",
+      "strands",
+      "hints",
+      "answers",
+      "today"
+    ],
+    "used_at": "2026-02-20T23:59:31.038042"
+  },
+  "Today's Wordle Hints, Answer and Help for Feb. 21, #1708": {
+    "category": "consumer_electronics",
+    "confidence": 0.7,
+    "keywords": [
+      "help",
+      "feb",
+      "wordle",
+      "hints",
+      "answer",
+      "today"
+    ],
+    "used_at": "2026-02-20T23:59:32.728812"
+  },
+  "Podcast: new Tesla (temp) Cybertruck, Cybercab, Ford wants China in the US, and more": {
+    "category": "auto",
+    "confidence": 0.95,
+    "keywords": [
+      "more",
+      "new",
+      "cybercab",
+      "ford",
+      "wants",
+      "tesla",
+      "temp",
+      "china",
+      "us",
+      "podcast",
+      "cybertruck"
+    ],
+    "used_at": "2026-02-20T23:59:34.431484"
+  },
+  "Microsoft says today’s Xbox shake-up doesn’t mean game studio layoffs": {
+    "category": "business",
+    "confidence": 0.9,
+    "keywords": [
+      "says",
+      "up",
+      "mean",
+      "layoffs",
+      "game",
+      "doesn",
+      "microsoft",
+      "studio",
+      "shake",
+      "xbox",
+      "today"
+    ],
+    "used_at": "2026-02-20T23:59:37.329291"
+  },
+  "Los Angeles County Sues Roblox Over Ongoing Child-Safety Concerns": {
+    "category": "politics",
+    "confidence": 0.9,
+    "keywords": [
+      "sues",
+      "roblox",
+      "angeles",
+      "safety",
+      "child",
+      "los",
+      "county",
+      "over",
+      "ongoing",
+      "concerns"
+    ],
+    "used_at": "2026-02-20T23:59:40.068682"
+  },
+  "Our Reviewers’ Top TV Pick for Gamers Is at Its Lowest Price in Months": {
+    "category": "consumer_electronics",
+    "confidence": 0.98,
+    "keywords": [
+      "pick",
+      "reviewers",
+      "top",
+      "our",
+      "tv",
+      "lowest",
+      "gamers",
+      "months",
+      "price"
+    ],
+    "used_at": "2026-02-20T23:59:42.318629"
+  },
+  "Anthropic-funded group backs candidate attacked by rival AI super PAC": {
+    "category": "politics",
+    "confidence": 0.9,
+    "keywords": [
+      "pac",
+      "group",
+      "anthropic",
+      "ai",
+      "candidate",
+      "backs",
+      "super",
+      "attacked",
+      "funded",
+      "rival"
+    ],
+    "used_at": "2026-02-20T23:59:42.787110"
+  },
+  "SCOTUS rules Trump’s tariffs are illegal — but the fight is far from over": {
+    "category": "politics",
+    "confidence": 0.9,
+    "keywords": [
+      "scotus",
+      "trump",
+      "rules",
+      "but",
+      "fight",
+      "illegal",
+      "tariffs",
+      "far",
+      "over"
+    ],
+    "used_at": "2026-02-20T23:59:44.655530"
+  },
+  "Read Microsoft gaming CEO Asha Sharma&#8217;s first memo on the future of Xbox": {
+    "category": "business",
+    "confidence": 0.9,
+    "keywords": [
+      "first",
+      "memo",
+      "gaming",
+      "sharma",
+      "microsoft",
+      "asha",
+      "read",
+      "future",
+      "xbox",
+      "ceo"
+    ],
+    "used_at": "2026-02-20T23:59:46.643669"
+  },
+  "Which Apple Watch Is for You? Apple Watch Series 11 vs. Ultra 3 and SE 3": {
+    "category": "consumer_electronics",
+    "confidence": 0.98,
+    "keywords": [
+      "series",
+      "watch",
+      "which",
+      "you",
+      "vs",
+      "se",
+      "apple",
+      "ultra"
+    ],
+    "used_at": "2026-02-20T23:59:51.438219"
+  },
+  "Xbox chief Phil Spencer is leaving Microsoft": {
+    "category": "key_people",
+    "confidence": 0.9,
+    "keywords": [
+      "chief",
+      "phil",
+      "microsoft",
+      "leaving",
+      "xbox",
+      "spencer"
+    ],
+    "used_at": "2026-02-20T23:59:51.574494"
+  },
+  "Read Xbox chief Phil Spencer’s memo about leaving Microsoft": {
+    "category": "key_people",
+    "confidence": 0.9,
+    "keywords": [
+      "chief",
+      "about",
+      "memo",
+      "phil",
+      "microsoft",
+      "read",
+      "leaving",
+      "xbox",
+      "spencer"
+    ],
+    "used_at": "2026-02-20T23:59:53.968937"
+  },
+  "Phil Spencer Retiring, Sarah Bond Out, Matt Booty Promoted as Microsoft AI Exec Asha Sharma Named New Xbox Boss – EXCLUSIVE": {
+    "category": "key_people",
+    "confidence": 0.9,
+    "keywords": [
+      "microsoft",
+      "new",
+      "exec",
+      "sharma",
+      "phil",
+      "promoted",
+      "spencer",
+      "sarah",
+      "booty",
+      "exclusive",
+      "matt",
+      "asha",
+      "out",
+      "bond",
+      "retiring",
+      "ai",
+      "boss",
+      "named",
+      "xbox"
+    ],
+    "used_at": "2026-02-20T23:59:55.908083"
+  },
+  "Sarah Bond is leaving Xbox": {
+    "category": "business",
+    "confidence": 0.9,
+    "keywords": [
+      "sarah",
+      "leaving",
+      "bond",
+      "xbox"
+    ],
+    "used_at": "2026-02-20T23:59:56.634239"
+  },
+  "Trump is making coal plants even dirtier as AI demands more energy": {
+    "category": "politics",
+    "confidence": 0.9,
+    "keywords": [
+      "trump",
+      "making",
+      "coal",
+      "demands",
+      "even",
+      "ai",
+      "plants",
+      "energy",
+      "more",
+      "dirtier"
+    ],
+    "used_at": "2026-02-20T23:59:59.151302"
+  },
+  "US tech to turn nuclear waste into power, cut radioactive life by 99.7%": {
+    "category": "business",
+    "confidence": 0.5,
+    "keywords": [
+      "life",
+      "cut",
+      "nuclear",
+      "turn",
+      "waste",
+      "into",
+      "us",
+      "power",
+      "tech",
+      "radioactive"
+    ],
+    "used_at": "2026-02-21T00:00:02.559040"
+  },
+  "Amazon Prime Members: You Can Play These Games for Free": {
+    "category": "business",
+    "confidence": 0.9,
+    "keywords": [
+      "these",
+      "members",
+      "you",
+      "amazon",
+      "prime",
+      "play",
+      "free",
+      "can",
+      "games"
+    ],
+    "used_at": "2026-02-21T00:00:02.913285"
   }
 }
