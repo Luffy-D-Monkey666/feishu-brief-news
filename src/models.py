@@ -81,6 +81,7 @@ class ProcessedArticle:
     is_primary: bool = True  # 是否为该事件的首发报道
     related_event_id: Optional[str] = None  # 关联的事件ID（用于去重）
     mentioned_people: list[str] = field(default_factory=list)
+    source_count: int = 1  # 报道该事件的来源数量（去重时更新）
     
     processed_at: datetime = field(default_factory=datetime.now)
 

@@ -414,7 +414,7 @@
             {% endif %}
 
             <div class="flex flex-wrap items-center gap-4 text-sm mb-4" style="color: var(--text-tertiary);">
-              <span class="flex items-center gap-1">📰 {{ article.source }}</span>
+              <span class="flex items-center gap-1">📰 {{ article.source }}{% if article.source_count and article.source_count > 1 %} <span style="color: var(--accent); font-size: 11px;">+{{ article.source_count - 1 }}源</span>{% endif %}</span>
               <span class="flex items-center gap-1">🕐 {{ article.published_at }}</span>
               {% if article.mentioned_people %}
               <span class="flex items-center gap-1">👤 {{ article.mentioned_people|join(', ') }}</span>

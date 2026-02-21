@@ -313,69 +313,144 @@ class NewsProcessor:
         
         return list(set(mentioned))
     
+    def _extract_entities(self, text: str) -> set:
+        """提取文本中的关键实体（人名、公司名、产品名）"""
+        import re
+        entities = set()
+        
+        # 常见科技公司和产品（大小写不敏感匹配）
+        tech_keywords = [
+            'apple', 'google', 'microsoft', 'meta', 'amazon', 'nvidia', 'tesla', 'openai',
+            'anthropic', 'samsung', 'intel', 'amd', 'qualcomm', 'huawei', 'xiaomi', 'bytedance',
+            'tiktok', 'twitter', 'x', 'facebook', 'instagram', 'whatsapp', 'youtube',
+            'iphone', 'ipad', 'macbook', 'pixel', 'galaxy', 'xbox', 'playstation', 'nintendo',
+            'chatgpt', 'gpt', 'claude', 'gemini', 'copilot', 'siri', 'alexa',
+            'cybertruck', 'model 3', 'model y', 'waymo', 'cruise',
+            '苹果', '谷歌', '微软', '特斯拉', '英伟达', '三星', '华为', '小米', '字节跳动',
+        ]
+        
+        text_lower = text.lower()
+        for kw in tech_keywords:
+            if kw.lower() in text_lower:
+                entities.add(kw.lower())
+        
+        # 提取人名模式（英文：首字母大写的连续词）
+        name_pattern = r'\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)\b'
+        names = re.findall(name_pattern, text)
+        for name in names:
+            # 过滤常见非人名
+            if name.lower() not in ['the verge', 'wall street', 'new york', 'los angeles', 'san francisco']:
+                entities.add(name.lower())
+        
+        return entities
+    
+    def _calc_entity_overlap(self, entities1: set, entities2: set) -> float:
+        """计算实体重叠度"""
+        if not entities1 or not entities2:
+            return 0.0
+        intersection = len(entities1 & entities2)
+        smaller = min(len(entities1), len(entities2))
+        return intersection / smaller if smaller > 0 else 0.0
+    
     async def get_embedding(self, text: str) -> np.ndarray:
         """获取文本嵌入向量（用于去重）"""
-        # 简化版：使用hash作为伪嵌入
-        # 实际生产应该使用sentence-transformers或OpenAI embeddings
-        
         if text in self.embeddings_cache:
             return self.embeddings_cache[text]
         
-        # 简单的词袋模型模拟
-        words = set(text.lower().split())
-        vec = np.array([hash(w) % 1000 for w in list(words)[:100]])
+        # 改进版：基于词频的 TF 向量
+        import re
+        words = re.findall(r'[a-zA-Z]+|[\u4e00-\u9fff]+', text.lower())
+        # 去除停用词
+        stop_words = {'the', 'a', 'an', 'is', 'are', 'was', 'were', 'in', 'on', 'at', 'to', 'for',
+                      'of', 'and', 'or', 'with', 'as', 'by', 'from', 'its', 'it', 'this', 'that',
+                      '的', '是', '在', '和', '了', '与', '将', '为', '被', '对', '等', '个'}
+        words = [w for w in words if w not in stop_words and len(w) > 1]
+        
+        # 构建词频向量
+        word_freq = {}
+        for w in words:
+            word_freq[w] = word_freq.get(w, 0) + 1
+        
+        # 转为固定维度向量
+        vec = np.array([hash(w) % 1000 + freq for w, freq in list(word_freq.items())[:100]])
         vec = np.pad(vec, (0, max(0, 100 - len(vec))))
         vec = vec / (np.linalg.norm(vec) + 1e-8)
         
         self.embeddings_cache[text] = vec
         return vec
     
-    async def deduplicate(self, articles: list[ProcessedArticle], threshold: float = 0.85) -> list[ProcessedArticle]:
-        """去重：保留首发 + 重要补充"""
+    async def deduplicate(self, articles: list[ProcessedArticle], threshold: float = 0.65) -> list[ProcessedArticle]:
+        """去重：保留首发，合并同一事件的多篇报道
+        
+        优化策略：
+        1. 降低相似度阈值到 0.65
+        2. 增加实体重叠检测（人名、公司名重叠度 > 0.5 视为同一事件）
+        3. 同一事件保留首发，记录其他来源数量
+        """
         if not articles:
             return []
         
-        # 按时间排序
+        # 按时间排序（早的优先）
         articles.sort(key=lambda x: x.published_at)
         
-        # 计算嵌入
-        embeddings = []
+        # 预处理：提取实体和嵌入
+        article_data = []
         for article in articles:
             text = f"{article.title_original} {article.title_zh}"
+            entities = self._extract_entities(text)
             emb = await self.get_embedding(text)
-            embeddings.append(emb)
+            article_data.append({
+                'article': article,
+                'entities': entities,
+                'embedding': emb
+            })
         
-        embeddings = np.array(embeddings)
-        
-        # 标记重复
+        # 去重
         unique_articles = []
-        seen_events = []  # (embedding, event_id)
+        seen_events = []  # [(embedding, entities, primary_article, source_count)]
         
-        for i, article in enumerate(articles):
-            is_duplicate = False
-            related_event_id = None
+        for data in article_data:
+            article = data['article']
+            entities = data['entities']
+            embedding = data['embedding']
             
-            for event_emb, event_id in seen_events:
-                similarity = cosine_similarity([embeddings[i]], [event_emb])[0][0]
-                if similarity > threshold:
+            is_duplicate = False
+            matched_event_idx = None
+            
+            for idx, (event_emb, event_entities, primary, source_count) in enumerate(seen_events):
+                # 方法1：嵌入相似度
+                emb_similarity = cosine_similarity([embedding], [event_emb])[0][0]
+                
+                # 方法2：实体重叠度
+                entity_overlap = self._calc_entity_overlap(entities, event_entities)
+                
+                # 判断是否重复：嵌入相似度 > 0.65 或 实体重叠度 > 0.5
+                if emb_similarity > threshold or entity_overlap > 0.5:
                     is_duplicate = True
-                    related_event_id = event_id
+                    matched_event_idx = idx
                     break
             
-            if is_duplicate:
-                # 标记为非首发，但检查是否有新信息
-                article.is_primary = False
-                article.related_event_id = related_event_id
+            if is_duplicate and matched_event_idx is not None:
+                # 更新来源计数
+                event_emb, event_entities, primary, source_count = seen_events[matched_event_idx]
+                seen_events[matched_event_idx] = (event_emb, event_entities, primary, source_count + 1)
                 
-                # 如果内容显著更长或来源更权威，仍然保留
-                if len(article.summary_zh) > 1000:  # 有重要补充
-                    unique_articles.append(article)
+                # 标记为非首发
+                article.is_primary = False
+                article.related_event_id = primary.id
+                
+                logger.debug(f"Duplicate found: '{article.title_zh[:30]}...' -> '{primary.title_zh[:30]}...'")
             else:
                 # 首发
                 article.is_primary = True
-                event_id = article.id
-                seen_events.append((embeddings[i], event_id))
+                seen_events.append((embedding, entities, article, 1))
                 unique_articles.append(article)
+        
+        # 给首发文章添加来源数量信息
+        for emb, entities, primary, source_count in seen_events:
+            if source_count > 1:
+                primary.source_count = source_count
+                logger.info(f"Event '{primary.title_zh[:30]}...' has {source_count} sources")
         
         logger.info(f"Deduplicated: {len(articles)} -> {len(unique_articles)} articles")
         return unique_articles
